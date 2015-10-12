@@ -272,7 +272,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		ModelMatrix.main.popMatrix();
 	}
 	
-	public void drawCeeling()
+	public void drawCeiling()
 	{
 		Gdx.gl.glUniform4f(colorLoc, 0.5f, 0.3f, 1.0f, 1.0f);
 		ModelMatrix.main.pushMatrix();
