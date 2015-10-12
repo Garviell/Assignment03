@@ -3,16 +3,19 @@ package com.ru.tgra.shapes;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Maze {
 	private int row = 20;
 	private int col = 20;
-	float body = 0.2f;
+	private float body = 0.2f;
 	private Cell[][] cell = new Cell[row][col];
-	int numDoors = 20;
+	private int numDoors = 20;
 	private Door[] doors = new Door[numDoors];
+	private int numPills = 40;
 	Random random= new Random();
+	public int score = 0;
 
 	
 	public Maze()
@@ -22,8 +25,6 @@ public class Maze {
 				cell[i][j] = new Cell(i, j);
 			}
 		}
-//		cell[0][0].eastWall = null;
-//		cell[0][0].northWall = null;
 
 		for(int i = 0; i < numDoors; i++)
 		{
@@ -36,21 +37,34 @@ public class Maze {
 			}
 		}
 		
+		for(int i = 0; i < numPills; i++)
+		{
+			int x = random.nextInt(20);
+			int z = random.nextInt(20);
+			if(cell[x][z].pill == null)
+			{
+				cell[x][z].pill = new Pill(x, z);
+			}
+		}
+		
 	}
 	
-	public void draw()
+	public void draw(int colorLoc, float deltaTime)
 	{
 		ModelMatrix.main.pushMatrix();
 		for ( int i = 0; i < row; i++) {
 			ModelMatrix.main.pushMatrix();
 			for (int j = 0; j < col; j++) {
+				Gdx.gl.glUniform4f(colorLoc, 0.55f, 0.53f, 0.5f, 1.0f);
 				cell[i][j].draw();
+				if(cell[i][j].pill != null) cell[i][j].pill.display(colorLoc, deltaTime);
 				ModelMatrix.main.addTranslation(0, 0, 1.0f);
 			}
 			ModelMatrix.main.popMatrix();
 			ModelMatrix.main.addTranslation(1.0f, 0, 0);
 		}
 		ModelMatrix.main.popMatrix();
+		
 		
 	}
 	
@@ -134,8 +148,14 @@ public class Maze {
 		int eyex = (int) Math.floor(cam.eye.x);
 		int eyez = (int) Math.floor(cam.eye.z);
 		
+		
 		if (cam.eye.x >= 0 && cam.eye.x < 20 && cam.eye.z >= 0 && cam.eye.z < 20)
 		{
+			if(cell[eyex][eyez].pill != null)
+			{
+				checkPill(cam, cell[eyex][eyez]);
+			}
+			
 			for(int i = Math.max(0, eyex-1); i < Math.min(20, eyex+2); i++)
 			{
 				for(int j = Math.max(0, eyez-1); j < Math.min(20, eyez+2); j++)
@@ -226,13 +246,55 @@ public class Maze {
 	
 	public void doorCollision(Camera cam, Door door)
 	{
-		if(cam.eye.x < door.posX)
-        {
-                cam.eye.x = door.posX - door.height/2 - body;
-        }
-        else
-        {
-                cam.eye.x = door.posX + door.height/2 + body;
-        }
+		float distanceX = Math.abs(cam.eye.x - door.endX);
+		float distanceZ = Math.abs(cam.eye.z - door.endZ);
+		
+		if(door.distanceZ < door.distanceX)
+		{
+			if(door.width > 0.4f && distanceZ <= 0.21f)
+			{
+				System.out.println("DOOM!");
+				ModelMatrix.main.alive = false;
+				ModelMatrix.main.setShaderMatrix();
+			}
+			else
+			{
+				if(cam.eye.z < door.posZ)
+	            {
+	                    cam.eye.z = door.posZ - door.width/2 - body;
+	            }
+	            else
+	            {
+	                    cam.eye.z = door.posZ + door.width/2 + body;
+	            }
+			}
+		}
+		else
+		{
+			if(cam.eye.x < door.posX)
+	        {
+	                cam.eye.x = door.posX - door.height/2 - body;
+	        }
+	        else
+	        {
+	                cam.eye.x = door.posX + door.height/2 + body;
+	        }
+		}
+		
+	}
+	
+	public void checkPill(Camera cam, Cell cell)
+	{
+		float x0 = cam.eye.x;
+		float z0 = cam.eye.z;
+		float x1 = cell.pill.posX;
+		float z1 = cell.pill.posZ;
+		if(Math.pow(x0-x1 ,2) + Math.pow(z1-z0 ,2) <= Math.pow((body - 0.06f),2))
+		{
+			cell.pill = null;
+			score++;
+			System.out.println(score);
+		}
+			
 	}
 }

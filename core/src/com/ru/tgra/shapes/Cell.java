@@ -10,6 +10,7 @@ public class Cell {
 	public Wall northWall;
 	public Wall eastWall;
 	public boolean door = false;
+	public Pill pill;
 	float wallWidth= 0.1f;
 	int row;
 	int col;
@@ -21,7 +22,7 @@ public class Cell {
 		col = j;
 		if(random.nextBoolean()) northWall = new Wall(i+1.0f, j+0.5f, 1.1f, 0.1f);
 		if(random.nextBoolean()) eastWall = new Wall(i+0.5f, j+1.0f, 0.1f, 1.1f);
-		
+		pill = null;
 	}
 	
 	public void draw()
