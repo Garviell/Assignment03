@@ -14,6 +14,7 @@ public class Maze {
 	private int numDoors = 20;
 	private Door[] doors = new Door[numDoors];
 	private int numPills = 40;
+	private int numDeadlyFloors = 20;
 	Random random= new Random();
 	public int score = 0;
 
@@ -47,6 +48,16 @@ public class Maze {
 			}
 		}
 		
+		for(int i = 0; i < numDeadlyFloors; i++)
+		{
+			int x = random.nextInt(20);
+			int z = random.nextInt(20);
+			if(cell[x][z].deadly == null)
+			{
+				cell[x][z].deadly = new DeadlyFloor(cell[x][z]);
+			}
+		}
+		
 	}
 	
 	public void draw(int colorLoc, float deltaTime)
@@ -58,6 +69,7 @@ public class Maze {
 				Gdx.gl.glUniform4f(colorLoc, 0.55f, 0.53f, 0.5f, 1.0f);
 				cell[i][j].draw();
 				if(cell[i][j].pill != null) cell[i][j].pill.display(colorLoc, deltaTime);
+				if(cell[i][j].deadly != null) cell[i][j].deadly.display(colorLoc);
 				ModelMatrix.main.addTranslation(0, 0, 1.0f);
 			}
 			ModelMatrix.main.popMatrix();
@@ -83,6 +95,8 @@ public class Maze {
 		
 	public void checkCollision(Camera cam, float deltaTime)
 	{	
+		outOfBoard(cam);
+		
 		ArrayList<Wall> check = new ArrayList<Wall>();
 		ArrayList<Wall> hit = new ArrayList<Wall>();
 		
@@ -149,6 +163,7 @@ public class Maze {
 		int eyez = (int) Math.floor(cam.eye.z);
 		
 		
+		
 		if (cam.eye.x >= 0 && cam.eye.x < 20 && cam.eye.z >= 0 && cam.eye.z < 20)
 		{
 			if(cell[eyex][eyez].pill != null)
@@ -162,6 +177,18 @@ public class Maze {
 				{
 					if(cell[i][j].northWall != null) check.add(cell[i][j].northWall);
 					if(cell[i][j].eastWall != null) check.add(cell[i][j].eastWall);
+				}
+			}
+			for(int i = 0; i < numDeadlyFloors; i++)
+			{
+				if(cell[eyex][eyez].deadly != null)
+				{
+					if(cell[eyex][eyez].deadly.color > 0.9)
+					{
+						score = 0;
+						ModelMatrix.main.alive = false;
+						ModelMatrix.main.setShaderMatrix();
+					}
 				}
 			}
 		}
@@ -253,7 +280,7 @@ public class Maze {
 		{
 			if(door.width > 0.4f && distanceZ <= 0.21f)
 			{
-				System.out.println("DOOM!");
+				score = 0;
 				ModelMatrix.main.alive = false;
 				ModelMatrix.main.setShaderMatrix();
 			}
@@ -296,5 +323,15 @@ public class Maze {
 			System.out.println(score);
 		}
 			
+	}
+	
+	public void outOfBoard(Camera cam)
+	{
+		if(cam.eye.x < -1.6f || cam.eye.x > 21.6f || cam.eye.z < -1.6f || cam.eye.z > 21.6f)
+		{
+			score = 0;
+			ModelMatrix.main.alive = false;
+			ModelMatrix.main.setShaderMatrix();
+		}
 	}
 }

@@ -262,7 +262,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		}
 		else
 		{
-			System.out.println("DEAD display");
 			cam.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
 			cam.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
 			cam.setShaderMatrices();
@@ -288,7 +287,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		Gdx.gl.glUniform4f(colorLoc, 0.333333f, 0.333333f, 0.333333f, 1.0f);
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
-		ModelMatrix.main.addScale(22.0f, 0.01f, 22.0f);
+		ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
 		ModelMatrix.main.setShaderMatrix();
 		BoxGraphic.drawSolidCube();
 		ModelMatrix.main.popMatrix();
