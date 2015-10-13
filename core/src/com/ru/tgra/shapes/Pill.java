@@ -1,7 +1,5 @@
 package com.ru.tgra.shapes;
 
-import com.badlogic.gdx.Gdx;
-
 public class Pill {
 	public ModelMatrix orientation;
 	public float posX = 0.5f;
@@ -19,9 +17,11 @@ public class Pill {
 	public void display(Shader shader, float deltaTime)
 	{
 
-		
+
+        shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+        shader.setMaterialDiffuse(0, 0.35f, 0.6f, 1.0f);
+        shader.setShininess(130);
 		ModelMatrix.main.pushMatrix();
-		shader.setColor(0, 0.75f, 1.0f, 1.0f);
 		ModelMatrix.main.addTranslation(posX, -0.1f, posZ);
 		ModelMatrix.main.addScale(1.0f, 3.0f, 1.0f);
 		ModelMatrix.main.addScale(0.03f, 0.03f, 0.03f);
@@ -29,7 +29,7 @@ public class Pill {
 		ModelMatrix.main.addTransformation(orientation.matrix);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
-        shader.setColor(0, 0.6f, 0.8f, 1.0f);
+        shader.setMaterialDiffuse(0, 0.6f, 0.8f, 1.0f);
 		ModelMatrix.main.addScale(1.01f, 1.01f, 1.01f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawOutlineSphere();

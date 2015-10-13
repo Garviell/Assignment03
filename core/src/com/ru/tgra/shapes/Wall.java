@@ -21,6 +21,9 @@ public class Wall {
 	}
 
 	public void draw(Shader shader){
+		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
+        shader.setMaterialDiffuse(0.5f, 0.5f, 0.7f, 1.0f);
+        shader.setShininess(2000);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(posX, 0, posZ);
         ModelMatrix.main.addScale(height, 1.0f, width);

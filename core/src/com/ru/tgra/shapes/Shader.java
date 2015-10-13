@@ -15,18 +15,25 @@ public class Shader {
 
     private int positionLoc;
     private int normalLoc;
-    private int colorLoc;
+    private int lightPosLoc;
+    private int lightDifLoc;
+    private int materialDifLoc;
+    private int materialShineLoc;
+    private int materialSpecularLoc;
 
     private int modelMatrixLoc;
     private int viewMatrixLoc;
     private int projectionMatrixLoc;
+    private int globalAmbientLoc;
+
+    private int eyePosLoc;
 
     Shader(){
         String vertexShaderString;
         String fragmentShaderString;
 
-        vertexShaderString = Gdx.files.internal("shaders/simple3D.vert").readString();
-        fragmentShaderString = Gdx.files.internal("shaders/simple3D.frag").readString();
+        vertexShaderString = Gdx.files.internal("shaders/vertexLighting.vert").readString();
+        fragmentShaderString = Gdx.files.internal("shaders/vertexLighting.frag").readString();
 
         vertexShaderID = Gdx.gl.glCreateShader(GL20.GL_VERTEX_SHADER);
         fragmentShaderID = Gdx.gl.glCreateShader(GL20.GL_FRAGMENT_SHADER);
@@ -54,13 +61,45 @@ public class Shader {
         viewMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
         projectionMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
-        colorLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_color");
+        eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
+        lightPosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
+        lightDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse");
+        materialDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
+        materialShineLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
+        materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
+        globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
 
         Gdx.gl.glUseProgram(renderingProgramID);
     }
 
-    public void setColor(float r, float g, float b, float a){
-        Gdx.gl.glUniform4f(colorLoc, r, g, b, a);
+    public void setMaterialDiffuse(float r, float g, float b, float a){
+        Gdx.gl.glUniform4f(materialDifLoc, r, g, b, a);
+    }
+
+
+
+    public void setLightPosition(float x, float y, float z, float w){
+        Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
+    }
+
+    public void setEyePosition(float x, float y, float z, float w){
+        Gdx.gl.glUniform4f(eyePosLoc, x, y, z, w);
+    }
+
+    public void setLightDiffuse(float r, float g, float b, float a){
+        Gdx.gl.glUniform4f(lightDifLoc, r, g, b, a);
+    }
+
+    public void setMaterialSpecular(float r, float g, float b, float a){
+        Gdx.gl.glUniform4f(materialSpecularLoc, r, g, b, a);
+    }
+
+    public void setGlobalAmbient(float r, float g, float b, float a){
+        Gdx.gl.glUniform4f(globalAmbientLoc, r, g, b, a);
+    }
+
+    public void setShininess(float shine){
+        Gdx.gl.glUniform1f(materialShineLoc, shine);
     }
 
     public int getVertexPointer(){
