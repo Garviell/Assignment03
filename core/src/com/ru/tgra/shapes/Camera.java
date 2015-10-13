@@ -63,6 +63,12 @@ public class Camera {
 		//eye.y += delU*u.y + delV*v.y + delN*n.y;
 		eye.z += delU*u.z + delV*v.z + delN*n.z;
 	}
+	
+	public void walk(float del)
+	{
+		eye.x -= del*n.x;
+		eye.z = del*n.z;
+	}
 
 	public void roll(float angle)
 	{
@@ -84,6 +90,17 @@ public class Camera {
 
 		u.set(t.x * c - n.x * s, t.y * c - n.y * s, t.z * c - n.z * s);
 		n.set(t.x * s + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
+	}
+	
+	public void rotateY(float angle)	//Rotation around the y axis
+	{
+		float radians = angle * (float)Math.PI / 180.0f;
+		float c = (float)Math.cos(radians);
+		float s = -(float)Math.sin(radians);
+		
+		u.set(c * u.x - s * u.z , u.y, s * u.x + c + u.z);
+		v.set(c * v.x - s * v.z , v.y, s * v.x + c + v.z);
+		u.set(c * n.x - s * n.z , n.y, s * n.x + c + n.z);
 	}
 
 	public void pitch(float angle)
