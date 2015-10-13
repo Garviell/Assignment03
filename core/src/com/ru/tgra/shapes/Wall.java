@@ -20,11 +20,11 @@ public class Wall {
 		this.distanceZ = Float.MAX_VALUE;
 	}
 
-	public void draw(float biwi, float bihi){
+	public void draw(Shader shader){
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(posX, 0, posZ);
-        ModelMatrix.main.addScale(height+bihi, 1.0f, width + biwi);
-        ModelMatrix.main.setShaderMatrix();
+        ModelMatrix.main.addScale(height, 1.0f, width);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
     }

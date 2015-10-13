@@ -8,8 +8,8 @@ public class Player {
     private boolean alive;
     private float fov;
 
-    Player(int viewMatrixLoc, int projectionMatrixLoc, float fov){
-        camera = new Camera(viewMatrixLoc, projectionMatrixLoc);
+    Player(float fov){
+        camera = new Camera();
         camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         this.fov = fov;
@@ -81,23 +81,30 @@ public class Player {
 
     }
 
-    public void display(){
+    public void display(Shader shader){
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
-        camera.setShaderMatrices();
+        shader.setViewMatrix(camera.getViewMatrix());
+        shader.setProjectionMatrix(camera.getProjectionMatrix());
     }
 
-    public void displayMap(int colorLoc){
-        Gdx.gl.glUniform4f(colorLoc, 1.0f, 0.3f, 0.1f, 1.0f);
+    public void displayMap(Shader shader){
+        shader.setColor(1.0f, 0.3f, 0.1f, 1.0f);
 
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(camera.eye.x, camera.eye.y, camera.eye.z);
         ModelMatrix.main.addScale(0.25f, 0.25f, 0.25f);
-        ModelMatrix.main.setShaderMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
         SphereGraphic.drawSolidSphere();
-        ModelMatrix.main.addTranslation(camera.v.x, camera.v.y, camera.v.z);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(-camera.u.x, 0, -camera.u.z);
         ModelMatrix.main.addScale(0.55f, 0.55f, 0.55f);
-        ModelMatrix.main.setShaderMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        SphereGraphic.drawSolidSphere();
+        ModelMatrix.main.popMatrix();
+        ModelMatrix.main.addTranslation(camera.u.x, 0, camera.u.z);
+        ModelMatrix.main.addScale(0.55f, 0.55f, 0.55f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
         SphereGraphic.drawSolidSphere();
         ModelMatrix.main.popMatrix();
 

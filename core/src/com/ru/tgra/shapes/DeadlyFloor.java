@@ -33,13 +33,13 @@ public class DeadlyFloor {
         }
     }
 
-    public void display(int colorLoc, float deltatime) {
+    public void display(Shader shader, float deltatime) {
         update(deltatime);
-        Gdx.gl.glUniform4f(colorLoc, Math.max(1 * color, 0.333333f), 0.333333f * (1-color), 0.333333f * (1-color), color);
+        shader.setColor(Math.max(1 * color, 0.333333f), 0.333333f * (1-color), 0.333333f * (1-color), color);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(posX, -0.5f, posZ);
         ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
-        ModelMatrix.main.setShaderMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
     }

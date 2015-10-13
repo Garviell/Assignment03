@@ -3,87 +3,33 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g3d.Model;
-
-import java.nio.FloatBuffer;
-import java.util.concurrent.TimeUnit;
-
-import com.badlogic.gdx.utils.BufferUtils;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
-	private FloatBuffer matrixBuffer;
-
-	private int renderingProgramID;
-	private int vertexShaderID;
-	private int fragmentShaderID;
-
-	private int positionLoc;
-	private int normalLoc;
-
-	private int modelMatrixLoc;
-	private int viewMatrixLoc;
-	private int projectionMatrixLoc;
-
-	private int colorLoc;
+    private int colorLoc;
 
     private Player player;
-	private Camera orthoCam;
-	
-	private Maze maze;
-	private ThingOne thingOne;
-	
-	private float deltaTime;
-	private float angle;
-	private float fov = 90.0f;
-	//private ModelMatrix modelMatrix;
+    private Camera orthoCam;
+    private Shader shader;
 
-	@Override
-	public void create () {
-		
-		Gdx.input.setInputProcessor(this);
+    private Maze maze;
+    private ThingOne thingOne;
 
-		String vertexShaderString;
-		String fragmentShaderString;
+    private float deltaTime;
+    private float angle;
+    private float fov = 90.0f;
+    //private ModelMatrix modelMatrix;
 
-		vertexShaderString = Gdx.files.internal("shaders/simple3D.vert").readString();
-		fragmentShaderString =  Gdx.files.internal("shaders/simple3D.frag").readString();
+    @Override
+    public void create() {
+        shader = new Shader();
 
-		vertexShaderID = Gdx.gl.glCreateShader(GL20.GL_VERTEX_SHADER);
-		fragmentShaderID = Gdx.gl.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-	
-		Gdx.gl.glShaderSource(vertexShaderID, vertexShaderString);
-		Gdx.gl.glShaderSource(fragmentShaderID, fragmentShaderString);
-	
-		Gdx.gl.glCompileShader(vertexShaderID);
-		Gdx.gl.glCompileShader(fragmentShaderID);
-
-		renderingProgramID = Gdx.gl.glCreateProgram();
-	
-		Gdx.gl.glAttachShader(renderingProgramID, vertexShaderID);
-		Gdx.gl.glAttachShader(renderingProgramID, fragmentShaderID);
-	
-		Gdx.gl.glLinkProgram(renderingProgramID);
-
-		positionLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_position");
-		Gdx.gl.glEnableVertexAttribArray(positionLoc);
-
-		normalLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_normal");
-		Gdx.gl.glEnableVertexAttribArray(normalLoc);
-
-		modelMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
-		viewMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
-		projectionMatrixLoc	= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
-
-		colorLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_color");
-
-		Gdx.gl.glUseProgram(renderingProgramID);
+        Gdx.input.setInputProcessor(this);
 
 /*
-		float[] mm = new float[16];
+        float[] mm = new float[16];
 
 		mm[0] = 1.0f; mm[4] = 0.0f; mm[8] = 0.0f; mm[12] = 0.0f;
 		mm[1] = 0.0f; mm[5] = 1.0f; mm[9] = 0.0f; mm[13] = 0.0f;
@@ -96,202 +42,183 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, modelMatrixBuffer);
 */
-		//COLOR IS SET HERE
-		Gdx.gl.glUniform4f(colorLoc, 0.7f, 0.2f, 0, 1);
+        //COLOR IS SET HERE
+        shader.setColor(0.7f, 0.2f, 0, 1);
 
-		BoxGraphic.create(positionLoc, normalLoc);
-		SphereGraphic.create(positionLoc, normalLoc);
-		SincGraphic.create(positionLoc);
-		CoordFrameGraphic.create(positionLoc);
+        BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
+        SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
+        SincGraphic.create(shader.getVertexPointer());
+        CoordFrameGraphic.create(shader.getVertexPointer());
 
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		ModelMatrix.main = new ModelMatrix();
-		ModelMatrix.main.loadIdentityMatrix();
-		ModelMatrix.main.setShaderMatrix(modelMatrixLoc);
+        ModelMatrix.main = new ModelMatrix();
+        ModelMatrix.main.loadIdentityMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-		//OrthographicProjection3D(-2, 2, -2, 2, 1, 100);
-		//PerspctiveProjection3D();
+        //OrthographicProjection3D(-2, 2, -2, 2, 1, 100);
+        //PerspctiveProjection3D();
 
-		//Camera
-        player = new Player(viewMatrixLoc, projectionMatrixLoc, fov);
-		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
-		
-		maze = new Maze();
-		thingOne = new ThingOne();
-	}
+        //Camera
+        player = new Player(fov);
+        orthoCam = new Camera();
+        orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
-	private void input()
-	{
-		
-	}
-	
-	private void update()
-	{
-		if(player.isAlive())
-		{
-			deltaTime = Gdx.graphics.getDeltaTime();
-	
-			angle += 180.0f * deltaTime;
+        maze = new Maze();
+        thingOne = new ThingOne();
+    }
+
+    private void input() {
+
+    }
+
+    private void update() {
+        if (player.isAlive()) {
+            deltaTime = Gdx.graphics.getDeltaTime();
+
+            angle += 180.0f * deltaTime;
             player.update(deltaTime);
-			maze.checkCollision(player, deltaTime);
-	
-		}
-		else
-		{
+            maze.checkCollision(player, deltaTime);
+
+        } else {
             player.flipAlive();
-			ModelMatrix.main.setShaderMatrix();
-			try {
-				Thread.sleep(3000);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void display()
-	{
-		if(player.isAlive())
-		{
-			//do all actual drawing and rendering here
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			for(int viewNum = 0; viewNum < 2; viewNum++)
-			{
-				if(viewNum == 0)
-				{
-                    player.display();
-					drawFloor();
-//					drawCeiling();
-					
-				}
-				else
-				{
-					Gdx.gl.glViewport(0, 0, 200, 200);
-					orthoCam.look(new Point3D(player.camera.eye.x, 20.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0,0,-1));
-					orthoCam.setShaderMatrices();
-				}
-	
-				ModelMatrix.main.loadIdentityMatrix();
-				
-				
-				ModelMatrix.main.pushMatrix();
-				
-				
-				maze.draw(colorLoc, deltaTime);
-				ModelMatrix.main.popMatrix();
-				
-				thingOne.display(colorLoc, deltaTime);
-				
-				Gdx.gl.glUniform4f(colorLoc, 1.0f, 0, 0, 1.0f);
-				
-				maze.displayDoors(colorLoc, deltaTime);
-				
-				
-				// Mini-map
-				if(viewNum == 1)
-				{
-                    player.displayMap(colorLoc);
-				}
-			}
-		}
-		else
-		{
-			player.camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
-			player.camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
-			player.camera.setShaderMatrices();
+            shader.setModelMatrix(ModelMatrix.main.getMatrix());
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-			Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		}
-	}
+    private void display() {
+        if (player.isAlive()) {
+            //do all actual drawing and rendering here
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+            for (int viewNum = 0; viewNum < 2; viewNum++) {
+                if (viewNum == 0) {
+                    player.display(shader);
+                    drawFloor();
+                    drawCeiling();
 
-	@Override
-	public void render () {
-		
-		input();
-		//put the code inside the update and display methods, depending on the nature of the code
-		update();
-		display();
+                } else {
+                    Gdx.gl.glViewport(0, 0, 200, 200);
+                    orthoCam.look(new Point3D(player.camera.eye.x, 20.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0, 0, -1));
+                    shader.setViewMatrix(orthoCam.getViewMatrix());
+                    shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
+                }
 
-	}
-	
-	public void drawFloor()
-	{
-		Gdx.gl.glUniform4f(colorLoc, 0.333333f, 0.333333f, 0.333333f, 1.0f);
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
-		ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
-		ModelMatrix.main.setShaderMatrix();
-		BoxGraphic.drawSolidCube();
-		ModelMatrix.main.popMatrix();
-	}
-	
-	public void drawCeiling()
-	{
-		Gdx.gl.glUniform4f(colorLoc, 0.5f, 0.3f, 1.0f, 1.0f);
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
-		ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);
-		ModelMatrix.main.setShaderMatrix();
-		BoxGraphic.drawSolidCube();
-		ModelMatrix.main.popMatrix();
-	}
+                ModelMatrix.main.loadIdentityMatrix();
 
 
+                ModelMatrix.main.pushMatrix();
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                maze.display(shader, deltaTime);
+                ModelMatrix.main.popMatrix();
 
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                thingOne.display(shader, deltaTime);
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                shader.setColor(1.0f, 0, 0, 1.0f);
 
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                maze.displayDoors(shader, deltaTime);
 
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                // Mini-map
+                if (viewNum == 1) {
+                    player.displayMap(shader);
+                }
+            }
+        } else {
+            player.camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0, 0.0f, 0), new Vector3D(0, 0.8f, 0));
+            player.camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
+            shader.setViewMatrix(player.camera.getViewMatrix());
+            shader.setProjectionMatrix(player.camera.getProjectionMatrix());
+            Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+            Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        }
+    }
 
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public void render() {
+        input();
+        //put the code inside the update and display methods, depending on the nature of the code
+        update();
+        display();
+
+    }
+
+    public void drawFloor() {
+        Gdx.gl.glUniform4f(colorLoc, 0.333333f, 0.333333f, 0.333333f, 1.0f);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
+        ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        BoxGraphic.drawSolidCube();
+        ModelMatrix.main.popMatrix();
+    }
+
+    public void drawCeiling() {
+        Gdx.gl.glUniform4f(colorLoc, 0.5f, 0.3f, 1.0f, 1.0f);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
+        ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        BoxGraphic.drawSolidCube();
+        ModelMatrix.main.popMatrix();
+    }
+
+
+    @Override
+    public boolean keyDown(int keycode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 
 }

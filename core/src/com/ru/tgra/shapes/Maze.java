@@ -62,30 +62,26 @@ public class Maze {
         score = 0;
     }
 
-    public void draw(int colorLoc, float deltaTime) {
+    public void display(Shader shader, float deltaTime) {
         ModelMatrix.main.pushMatrix();
         for (int i = 0; i < row; i++) {
-            ModelMatrix.main.pushMatrix();
             for (int j = 0; j < col; j++) {
-                Gdx.gl.glUniform4f(colorLoc, 0.55f, 0.53f, 0.5f, 1.0f);
-                cell[i][j].draw();
-                if (cell[i][j].pill != null) cell[i][j].pill.display(colorLoc, deltaTime);
-                if (cell[i][j].deadly != null) cell[i][j].deadly.display(colorLoc, deltaTime);
-                ModelMatrix.main.addTranslation(0, 0, 1.0f);
+                shader.setColor(0.55f, 0.53f, 0.5f, 1.0f);
+                cell[i][j].display(shader);
+                if (cell[i][j].pill != null) cell[i][j].pill.display(shader, deltaTime);
+                if (cell[i][j].deadly != null) cell[i][j].deadly.display(shader, deltaTime);
             }
-            ModelMatrix.main.popMatrix();
-            ModelMatrix.main.addTranslation(1.0f, 0, 0);
         }
         ModelMatrix.main.popMatrix();
 
 
     }
 
-    public void displayDoors(int colorLoc, float deltaTime) {
+    public void displayDoors(Shader shader, float deltaTime) {
         for (int i = 0; i < numDoors; i++) {
             if (doors[i] != null) {
                 doors[i].update(deltaTime);
-                doors[i].display(colorLoc);
+                doors[i].display(shader);
             }
         }
 
@@ -236,7 +232,6 @@ public class Maze {
             if (door.width > 0.4f && distanceZ <= 0.21f) {
                 score = 0;
                 player.flipAlive();
-                ModelMatrix.main.setShaderMatrix();
             } else {
                 if (cam.eye.z < door.posZ) {
                     cam.eye.z = door.posZ - door.width / 2 - body;
@@ -272,7 +267,6 @@ public class Maze {
         if (cam.eye.x < -1.6f || cam.eye.x > 21.6f || cam.eye.z < -1.6f || cam.eye.z > 21.6f) {
             score = 0;
             player.flipAlive();
-            ModelMatrix.main.setShaderMatrix();
         }
     }
 }

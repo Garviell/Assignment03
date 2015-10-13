@@ -59,14 +59,14 @@ public class Door {
 		
 	}
 	
-	public void display(int colorLoc)
+	public void display(Shader shader)
 	{
-		Gdx.gl.glUniform4f(colorLoc, 1.0f, 0, 0, 1.0f);
-		
+        shader.setColor(1.0f, 0, 0, 1.0f);
+
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(posX, 0, posZ);
 		ModelMatrix.main.addScale(0.1f, 1.0f, scale);
-		ModelMatrix.main.setShaderMatrix();
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube();
 		ModelMatrix.main.popMatrix();
 	}

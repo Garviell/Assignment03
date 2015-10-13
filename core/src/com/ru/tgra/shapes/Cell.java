@@ -23,29 +23,13 @@ public class Cell {
 		deadly = null;
 	}
 	
-	public void draw()
+	public void display(Shader shader)
 	{
-		if (northWall != null)
-		{
-			ModelMatrix.main.pushMatrix();
-			
-			ModelMatrix.main.addTranslation(1.0f, 0, 0.5f);
-			ModelMatrix.main.addScale(wallWidth, 1.0f, 1.1f);
-			ModelMatrix.main.setShaderMatrix();
-			BoxGraphic.drawSolidCube();
-			
-			ModelMatrix.main.popMatrix();
+		if (northWall != null) {
+			northWall.draw(shader);
 		}
-		if (eastWall != null)
-		{
-			ModelMatrix.main.pushMatrix();
-			
-			ModelMatrix.main.addTranslation(0.5f, 0, 1.0f);
-			ModelMatrix.main.addScale(1.1f, 1.0f, wallWidth);
-			ModelMatrix.main.setShaderMatrix();
-			BoxGraphic.drawSolidCube();
-			
-			ModelMatrix.main.popMatrix();
+		if (eastWall != null) {
+			eastWall.draw(shader);
 		}
 	}
 }

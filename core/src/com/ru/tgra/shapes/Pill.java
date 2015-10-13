@@ -16,22 +16,22 @@ public class Pill {
 		this.orientation.addTransformation(orientation.matrix);
 	}
 	
-	public void display(int colorLoc, float deltaTime)
+	public void display(Shader shader, float deltaTime)
 	{
 
 		
 		ModelMatrix.main.pushMatrix();
-		Gdx.gl.glUniform4f(colorLoc, 0, 0.75f, 1.0f, 1.0f);
+		shader.setColor(0, 0.75f, 1.0f, 1.0f);
 		ModelMatrix.main.addTranslation(0.5f, -0.1f, 0.5f);
 		ModelMatrix.main.addScale(1.0f, 3.0f, 1.0f);
 		ModelMatrix.main.addScale(0.03f, 0.03f, 0.03f);
 		orientation.addRotationY(0.3f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
-		ModelMatrix.main.setShaderMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
-		Gdx.gl.glUniform4f(colorLoc, 0, 0.6f, 0.8f, 1.0f);
+        shader.setColor(0, 0.6f, 0.8f, 1.0f);
 		ModelMatrix.main.addScale(1.01f, 1.01f, 1.01f);
-		ModelMatrix.main.setShaderMatrix();
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawOutlineSphere();
 		ModelMatrix.main.popMatrix();
 	}
