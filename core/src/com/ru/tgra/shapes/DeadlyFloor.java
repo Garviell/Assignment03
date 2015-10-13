@@ -2,33 +2,50 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.Gdx;
 
+import java.util.Random;
+
 public class DeadlyFloor {
-	public float posX = 0.5f;
-	public float posZ = 0.5f;
-	public float color;
-	float k;
-	
-	public DeadlyFloor(Cell cell)
-	{
-		color = 0.1f;
-		k = 0.0001f;
-	}
-	
-	public void display(int colorLoc)
-	{
-		if(color == 1.1f) { k = -0.0001f; }
-		if(color == 0.1f) { k = 0.0001f; }
-		
-		color += k;
-		color = 1.0f;
-		
-		Gdx.gl.glUniform4f(colorLoc, color, 0.333333f, 0.333333f, 1.0f);
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(posX, -0.5f, posZ);
-		ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
-		ModelMatrix.main.setShaderMatrix();
-		BoxGraphic.drawSolidCube();
-		ModelMatrix.main.popMatrix();
-	}
-	
+    private float posX;
+    private float posZ;
+    private float color;
+    private float deathAt;
+    private float changeRate;
+    private boolean fading;
+
+    public DeadlyFloor(float deathAt, float changeRate) {
+        Random rand = new Random();
+        this.deathAt = deathAt;
+        this.changeRate = changeRate;
+        color = rand.nextFloat();
+        fading = rand.nextBoolean();
+        posX = 0.5f;
+        posZ = 0.5f;
+    }
+
+    private void update(float deltatime){
+        if(fading){
+            color -= (deltatime * changeRate);
+        } else {
+            color += (deltatime * changeRate);
+        }
+        if (color < 0 || color > 1.0){
+            fading = !fading;
+        }
+    }
+
+    public void display(int colorLoc, float deltatime) {
+        update(deltatime);
+        Gdx.gl.glUniform4f(colorLoc, Math.max(1 * color, 0.333333f), 0.333333f * (1-color), 0.333333f * (1-color), color);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(posX, -0.5f, posZ);
+        ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
+        ModelMatrix.main.setShaderMatrix();
+        BoxGraphic.drawSolidCube();
+        ModelMatrix.main.popMatrix();
+    }
+
+    public boolean isDeadly(){
+        return color >= deathAt;
+    }
+
 }

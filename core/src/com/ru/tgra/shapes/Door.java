@@ -87,13 +87,9 @@ public class Door {
 	    if (checkX <= (height/2 + body)) 
 	    {
 	    	return true;
-	    } 
-	    if (checkZ <= (width/2 + body)) 
-	    {
-	    	return true;
 	    }
-	    
-		return false;
+		return checkZ <= (width / 2 + body);
+
 	}
 	
 	
