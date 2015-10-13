@@ -37,12 +37,12 @@ public class Player {
         //do all updates to the game
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            //camera.yaw(-90.0f * deltaTime);
-            camera.rotateY(-90.0f * deltaTime);
+            camera.yaw(-90.0f * deltaTime);
+//            camera.rotateY(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            //camera.yaw(90.0f * deltaTime);
-            camera.rotateY(90.0f * deltaTime);
+            camera.yaw(90.0f * deltaTime);
+//            camera.rotateY(90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.pitch(-90.0f * deltaTime);
@@ -57,12 +57,12 @@ public class Player {
             camera.slide(2.0f * deltaTime, 0, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-//            camera.slide(0, 0, -2.0f * deltaTime);
-            camera.walk(2.0f * deltaTime);
+            camera.slide(0, 0, -2.0f * deltaTime);
+//            camera.walk(2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-//            camera.slide(0, 0, 2.0f * deltaTime);
-            camera.walk(-2.0f * deltaTime);
+            camera.slide(0, 0, 2.0f * deltaTime);
+//            camera.walk(-2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.R)) {
             camera.slide(0, 3.0f * deltaTime, 0);

@@ -54,7 +54,7 @@ public class Maze {
             int x = random.nextInt(20);
             int z = random.nextInt(20);
             if (cell[x][z].deadly == null) {
-                cell[x][z].deadly = new DeadlyFloor(0.9f, 0.1f);
+                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.1f);
             }
         }
 

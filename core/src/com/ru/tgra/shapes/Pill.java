@@ -22,7 +22,7 @@ public class Pill {
 		
 		ModelMatrix.main.pushMatrix();
 		shader.setColor(0, 0.75f, 1.0f, 1.0f);
-		ModelMatrix.main.addTranslation(0.5f, -0.1f, 0.5f);
+		ModelMatrix.main.addTranslation(posX, -0.1f, posZ);
 		ModelMatrix.main.addScale(1.0f, 3.0f, 1.0f);
 		ModelMatrix.main.addScale(0.03f, 0.03f, 0.03f);
 		orientation.addRotationY(0.3f * deltaTime);
