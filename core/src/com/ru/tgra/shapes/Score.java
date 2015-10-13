@@ -15,6 +15,7 @@ public class Score {
 	{
 		numberOfThings++;
 		things[numberOfThings] = new ThingOne();
+        System.out.println(numberOfThings);
 	}
 	
 	public void removething()

@@ -85,6 +85,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
         } else {
             player.flipAlive();
+            loseThings();
             shader.setModelMatrix(ModelMatrix.main.getMatrix());
             try {
                 Thread.sleep(3000);

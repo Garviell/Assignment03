@@ -12,8 +12,8 @@ public class ThingOne {
 	public ThingOne()
 	{
 		posX = (random.nextFloat() * 25.0f);
-		posY = (random.nextFloat() * 15.0f) + 3.0f;
-		posZ = (random.nextFloat() * 15.0f) + 3.0f;
+		posY = (random.nextFloat() * 10.0f) + 3.0f;
+		posZ = (random.nextFloat() * 10.0f) + 3.0f;
 		
 		this.orientation = new ModelMatrix();
 		this.orientation.loadIdentityMatrix();
