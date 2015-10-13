@@ -37,11 +37,11 @@ public class Player {
         //do all updates to the game
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            //camera.yaw(-90.0f * deltaTime);
+//            camera.yaw(-90.0f * deltaTime);
             camera.rotateY(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            //camera.yaw(90.0f * deltaTime);
+//            camera.yaw(90.0f * deltaTime);
             camera.rotateY(90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -70,17 +70,17 @@ public class Player {
         if(Gdx.input.isKeyPressed(Input.Keys.F)) {
             camera.slide(0, -3.0f * deltaTime, 0);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+        /*if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
             camera.roll(-45.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.E)) {
             camera.roll(45.0f * deltaTime);
-        }
+        }*/
         if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-            changeFov(-30.0f, deltaTime);
+            changeFov(-15.0f, deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-            changeFov(30.0f, deltaTime);
+            changeFov(15.0f, deltaTime);
         }
 
     }
