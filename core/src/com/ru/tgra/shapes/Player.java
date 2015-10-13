@@ -7,6 +7,8 @@ public class Player {
     public Camera camera;
     private boolean alive;
     private float fov;
+    public Score score;
+    
 
     Player(float fov){
         camera = new Camera();
@@ -14,6 +16,7 @@ public class Player {
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         this.fov = fov;
         alive = true;
+        score = new Score();
     }
 
 
@@ -26,7 +29,8 @@ public class Player {
     }
 
     private void changeFov(float fov, float deltaTime){
-        this.fov += fov * deltaTime;
+    	if(fov < 0 && this.fov > 10.0f){ this.fov += fov * deltaTime; }
+    	if(fov > 0 && this.fov < 90.0f){ this.fov += fov * deltaTime; }
     }
 
     public float getFov(){
@@ -37,12 +41,10 @@ public class Player {
         //do all updates to the game
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.yaw(-90.0f * deltaTime);
-//            camera.rotateY(-90.0f * deltaTime);
+            camera.rotateY(90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.yaw(90.0f * deltaTime);
-//            camera.rotateY(90.0f * deltaTime);
+            camera.rotateY(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.pitch(-90.0f * deltaTime);
@@ -57,30 +59,16 @@ public class Player {
             camera.slide(2.0f * deltaTime, 0, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.slide(0, 0, -2.0f * deltaTime);
-//            camera.walk(2.0f * deltaTime);
+            camera.walk(2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.slide(0, 0, 2.0f * deltaTime);
-//            camera.walk(-2.0f * deltaTime);
+            camera.walk(-2.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-            camera.slide(0, 3.0f * deltaTime, 0);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-            camera.slide(0, -3.0f * deltaTime, 0);
-        }
-        /*if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            camera.roll(-45.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-            camera.roll(45.0f * deltaTime);
-        }*/
         if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-            changeFov(-15.0f, deltaTime);
+            changeFov(-20.0f, deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-            changeFov(15.0f, deltaTime);
+            changeFov(20.0f, deltaTime);
         }
 
     }
