@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
 
 import java.nio.FloatBuffer;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.utils.BufferUtils;
 
@@ -135,119 +136,139 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	
 	private void update()
 	{
-		deltaTime = Gdx.graphics.getDeltaTime();
-
-		angle += 180.0f * deltaTime;
-
-		//do all updates to the game
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.yaw(-90.0f * deltaTime);
+		if(ModelMatrix.main.alive)
+		{
+			deltaTime = Gdx.graphics.getDeltaTime();
+	
+			angle += 180.0f * deltaTime;
+	
+			//do all updates to the game
+			
+			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+				cam.yaw(-90.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+				cam.yaw(90.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				cam.pitch(-90.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				cam.pitch(90.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+				cam.slide(-2.0f * deltaTime, 0, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+				cam.slide(2.0f * deltaTime, 0, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+				cam.slide(0, 0, -2.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+				cam.slide(0, 0, 2.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.R)) {
+				cam.slide(0, 3.0f * deltaTime, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.F)) {
+				cam.slide(0, -3.0f * deltaTime, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+				cam.roll(-45.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.E)) {
+				cam.roll(45.0f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.T)) {
+				fov -= 30.0f * deltaTime;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.G)) {
+				fov += 30.0f * deltaTime;
+			}
+			
+			maze.checkCollision(cam, deltaTime);
+	
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.yaw(90.0f * deltaTime);
+		else
+		{
+			ModelMatrix.main.alive = true;
+			ModelMatrix.main.setShaderMatrix();
+			
+			try {
+				Thread.sleep(3000);
+			} 
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			cam.pitch(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			cam.pitch(90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			cam.slide(-2.0f * deltaTime, 0, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			cam.slide(2.0f * deltaTime, 0, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			cam.slide(0, 0, -2.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			cam.slide(0, 0, 2.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			cam.slide(0, 3.0f * deltaTime, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			cam.slide(0, -3.0f * deltaTime, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			cam.roll(-45.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-			cam.roll(45.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-			fov -= 30.0f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-			fov += 30.0f * deltaTime;
-		}
-		
-		maze.checkCollision(cam, deltaTime);
-
-		
 	}
 	
 	private void display()
 	{
-		//do all actual drawing and rendering here
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
-		for(int viewNum = 0; viewNum < 2; viewNum++)
+		if(ModelMatrix.main.alive)
 		{
-			if(viewNum == 0)
+			//do all actual drawing and rendering here
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			
+			for(int viewNum = 0; viewNum < 2; viewNum++)
 			{
-				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-				cam.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
-				cam.setShaderMatrices();
-				drawFloor();
-				//drawCeeling();
+				if(viewNum == 0)
+				{
+					Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					cam.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
+					cam.setShaderMatrices();
+					drawFloor();
+//					drawCeeling();
+					
+				}
+				else
+				{
+					Gdx.gl.glViewport(0, 0, 200, 200);
+					orthoCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
+					orthoCam.setShaderMatrices();
+				}
+	
+				ModelMatrix.main.loadIdentityMatrix();
 				
-			}
-			else
-			{
-				Gdx.gl.glViewport(0, 0, 200, 200);
-				orthoCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
-				orthoCam.setShaderMatrices();
-			}
-
-			ModelMatrix.main.loadIdentityMatrix();
-			
-			
-			ModelMatrix.main.pushMatrix();
-//			Gdx.gl.glUniform4f(colorLoc, 0.86f, 0.44f, 0.58f, 1.0f);
-//			Gdx.gl.glUniform4f(colorLoc, 0.5f, 0.3f, 1.0f, 1.0f);
-			Gdx.gl.glUniform4f(colorLoc, 0.55f, 0.53f, 0.5f, 1.0f);
-			
-			maze.draw();
-			ModelMatrix.main.popMatrix();
-			
-			thingOne.display(colorLoc, deltaTime);
-			
-			Gdx.gl.glUniform4f(colorLoc, 1.0f, 0, 0, 1.0f);
-			/*
-			ModelMatrix.main.pushMatrix();
-//			ModelMatrix.main.addTranslation(posX, 0, posZ);
-			ModelMatrix.main.addScale(0.1f, 1.0f, 1.0f);
-			ModelMatrix.main.setShaderMatrix();
-			BoxGraphic.drawSolidCube();
-			ModelMatrix.main.popMatrix();*/
-			
-			maze.displayDoors(colorLoc, deltaTime);
-			
-			// Mini-map
-			if(viewNum == 1)
-			{
-				Gdx.gl.glUniform4f(colorLoc, 1.0f, 0.3f, 0.1f, 1.0f);
 				
 				ModelMatrix.main.pushMatrix();
-				ModelMatrix.main.addTranslation(cam.eye.x, cam.eye.y, cam.eye.z);
-				ModelMatrix.main.addScale(0.25f, 0.25f, 0.25f);
-				ModelMatrix.main.setShaderMatrix();
-				SphereGraphic.drawSolidSphere();
+				
+				
+				maze.draw(colorLoc, deltaTime);
 				ModelMatrix.main.popMatrix();
+				
+				thingOne.display(colorLoc, deltaTime);
+				
+				Gdx.gl.glUniform4f(colorLoc, 1.0f, 0, 0, 1.0f);
+				
+				maze.displayDoors(colorLoc, deltaTime);
+				
+				
+				// Mini-map
+				if(viewNum == 1)
+				{
+					Gdx.gl.glUniform4f(colorLoc, 1.0f, 0.3f, 0.1f, 1.0f);
+					
+					ModelMatrix.main.pushMatrix();
+					ModelMatrix.main.addTranslation(cam.eye.x, cam.eye.y, cam.eye.z);
+					ModelMatrix.main.addScale(0.25f, 0.25f, 0.25f);
+					ModelMatrix.main.setShaderMatrix();
+					SphereGraphic.drawSolidSphere();
+					ModelMatrix.main.popMatrix();
+				}
 			}
+		}
+		else
+		{
+			cam.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
+			cam.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
+			cam.setShaderMatrices();
+
+			Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 	}
 
@@ -266,7 +287,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		Gdx.gl.glUniform4f(colorLoc, 0.333333f, 0.333333f, 0.333333f, 1.0f);
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
-		ModelMatrix.main.addScale(22.0f, 0.01f, 22.0f);
+		ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
 		ModelMatrix.main.setShaderMatrix();
 		BoxGraphic.drawSolidCube();
 		ModelMatrix.main.popMatrix();

@@ -2,6 +2,8 @@ package com.ru.tgra.shapes;
 
 public class ModelMatrix extends Matrix {
 	
+	public boolean alive;
+	
 	public static ModelMatrix main;
 
 	private float[] MMtmp;
@@ -10,6 +12,7 @@ public class ModelMatrix extends Matrix {
 	{
 		super();
 		MMtmp = new float[16];
+		alive = true;
 	}
 
 	public Vector3D getA()
