@@ -12,14 +12,14 @@ public class DeadlyFloor {
     private float changeRate;
     private boolean fading;
 
-    public DeadlyFloor(float deathAt, float changeRate) {
+    public DeadlyFloor(float posX, float posZ, float deathAt, float changeRate) {
         Random rand = new Random();
         this.deathAt = deathAt;
         this.changeRate = changeRate;
         color = rand.nextFloat();
         fading = rand.nextBoolean();
-        posX = 0.5f;
-        posZ = 0.5f;
+        this.posX = posX + 0.5f;
+        this.posZ = posZ + 0.5f;
     }
 
     private void update(float deltatime){
@@ -37,7 +37,7 @@ public class DeadlyFloor {
         update(deltatime);
         shader.setColor(Math.max(1 * color, 0.333333f), 0.333333f * (1-color), 0.333333f * (1-color), color);
         ModelMatrix.main.pushMatrix();
-        ModelMatrix.main.addTranslation(posX, -0.5f, posZ);
+        ModelMatrix.main.addTranslation(posX, -0.503f, posZ);
         ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
