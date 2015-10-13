@@ -67,7 +67,7 @@ public class Camera {
 	public void walk(float del)
 	{
 		eye.x -= del*n.x;
-		eye.z = del*n.z;
+		eye.z -= del*n.z;
 	}
 
 	public void roll(float angle)
@@ -98,9 +98,9 @@ public class Camera {
 		float c = (float)Math.cos(radians);
 		float s = -(float)Math.sin(radians);
 		
-		u.set(c * u.x - s * u.z , u.y, s * u.x + c + u.z);
-		v.set(c * v.x - s * v.z , v.y, s * v.x + c + v.z);
-		u.set(c * n.x - s * n.z , n.y, s * n.x + c + n.z);
+		u.set(c * u.x - s * u.z , u.y, s * u.x + c * u.z);
+		v.set(c * v.x - s * v.z , v.y, s * v.x + c * v.z);
+		n.set(c * n.x - s * n.z , n.y, s * n.x + c * n.z);
 	}
 
 	public void pitch(float angle)

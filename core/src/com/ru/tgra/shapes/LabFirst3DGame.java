@@ -20,6 +20,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private float deltaTime;
     private float angle;
     private float fov = 90.0f;
+    private int thingsLostWhenDeathOccurs = 2;
     //private ModelMatrix modelMatrix;
 
     @Override
@@ -101,11 +102,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 if (viewNum == 0) {
                     player.display(shader);
                     drawFloor();
-                    drawCeiling();
+                    //drawCeiling();
 
                 } else {
                     Gdx.gl.glViewport(0, 0, 200, 200);
-                    orthoCam.look(new Point3D(player.camera.eye.x, 20.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0, 0, -1));
+                    orthoCam.look(new Point3D(player.camera.eye.x, 35.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0, 0, -1));
                     shader.setViewMatrix(orthoCam.getViewMatrix());
                     shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
                 }
@@ -119,11 +120,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 maze.display(shader, deltaTime);
                 ModelMatrix.main.popMatrix();
 
-                thingOne.display(shader, deltaTime);
 
                 shader.setColor(1.0f, 0, 0, 1.0f);
 
                 maze.displayDoors(shader, deltaTime);
+                
+                player.score.display(shader, deltaTime);
 
 
                 // Mini-map
@@ -169,6 +171,17 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
+    }
+    
+    public void loseThings()
+    {
+    	for(int i = 0; i < thingsLostWhenDeathOccurs; i++)
+        {
+            if(player.score.numberOfThings > 0)
+            {
+            	player.score.removething();
+            }
+        }
     }
 
 

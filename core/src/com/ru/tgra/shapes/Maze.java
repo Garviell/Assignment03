@@ -14,7 +14,7 @@ public class Maze {
     private Cell[][] cell;
     private int numDoors;
     private Door[] doors;
-    private int numPills;
+    private int numPills = 10;
     private int numDeadlyFloors;
 
 
@@ -40,12 +40,13 @@ public class Maze {
             }
         }
 
-        numPills = 40;
-        for (int i = 0; i < numPills; i++) {
+        int n = 0;
+        while (n < numPills) {
             int x = random.nextInt(20);
             int z = random.nextInt(20);
             if (cell[x][z].pill == null) {
                 cell[x][z].pill = new Pill(x, z);
+                n++;
             }
         }
 
@@ -73,6 +74,7 @@ public class Maze {
             }
         }
         ModelMatrix.main.popMatrix();
+        
 
     }
 
@@ -148,7 +150,7 @@ public class Maze {
         if (cam.eye.x >= 0 && cam.eye.x < 20 && cam.eye.z >= 0 && cam.eye.z < 20) {
             Cell currentCell = cell[eyex][eyez];
             if (currentCell.pill != null) {
-                checkPill(cam, cell[eyex][eyez]);
+                checkPill(cam, cell[eyex][eyez], player);
             }
 
             for (int i = Math.max(0, eyex - 1); i < Math.min(20, eyex + 2); i++) {
@@ -248,15 +250,14 @@ public class Maze {
 
     }
 
-    public void checkPill(Camera cam, Cell cell) {
+    public void checkPill(Camera cam, Cell cell, Player player) {
         float x0 = cam.eye.x;
         float z0 = cam.eye.z;
         float x1 = cell.pill.posX;
         float z1 = cell.pill.posZ;
         if (Math.pow(x0 - x1, 2) + Math.pow(z1 - z0, 2) <= Math.pow((body - 0.06f), 2)) {
             cell.pill = null;
-            score++;
-            System.out.println(score);
+            player.score.addThing();
         }
 
     }

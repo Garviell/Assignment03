@@ -1,15 +1,24 @@
 package com.ru.tgra.shapes;
 
+import java.util.Random;
 
 public class ThingOne {
 	public ModelMatrix orientation;
+	private Random random = new Random();
+	private float posX;
+	private float posY;
+	private float posZ;
 	
 	public ThingOne()
 	{
+		posX = (random.nextFloat() * 25.0f);
+		posY = (random.nextFloat() * 15.0f) + 3.0f;
+		posZ = (random.nextFloat() * 15.0f) + 3.0f;
+		
 		this.orientation = new ModelMatrix();
 		this.orientation.loadIdentityMatrix();
 		this.orientation.addTransformation(orientation.matrix);
-		this.orientation.addTranslation(10, 4, 10);
+		this.orientation.addTranslation(posX, posY, posZ);
 	}
 	
 	public void display(Shader shader, float deltaTime)
