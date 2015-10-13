@@ -74,7 +74,6 @@ public class Maze {
         }
         ModelMatrix.main.popMatrix();
 
-
     }
 
     public void displayDoors(Shader shader, float deltaTime) {
