@@ -7,6 +7,9 @@ uniform vec4 u_lightDiffuse;
 uniform vec4 u_globalAmbient;
 uniform vec4 u_lightDirection;
 uniform float u_lightFocus;
+uniform float u_constantAttenuation;
+uniform float u_linearAttenuation;
+uniform float u_quadraticAttenuation;
 
 uniform vec4 u_materialDiffuse;
 uniform vec4 u_materialSpecular;

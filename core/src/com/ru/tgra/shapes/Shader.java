@@ -23,6 +23,9 @@ public class Shader {
     private int materialShineLoc;
     private int materialSpecularLoc;
     private int materialEmiLoc;
+    private int globalAttLoc;
+    private int linearAttLoc;
+    private int quadraticAttLoc;
 
     private int modelMatrixLoc;
     private int viewMatrixLoc;
@@ -74,6 +77,9 @@ public class Shader {
         materialEmiLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
         lightDirLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
         lightFocLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
+        globalAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAttenuation");
+        linearAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation");
+        quadraticAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation");
 
         Gdx.gl.glUseProgram(renderingProgramID);
     }
@@ -94,6 +100,18 @@ public class Shader {
 
     public void setFocus(float shine){
         Gdx.gl.glUniform1f(lightFocLoc, shine);
+    }
+
+    public void setGlobalAtt(float shine){
+        Gdx.gl.glUniform1f(globalAttLoc, shine);
+    }
+
+    public void setLinearAtt(float shine){
+        Gdx.gl.glUniform1f(linearAttLoc, shine);
+    }
+
+    public void setQuadraticAtt(float shine){
+        Gdx.gl.glUniform1f(quadraticAttLoc, shine);
     }
 
     public void setMaterialEmission(float r, float g, float b, float a){
