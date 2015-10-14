@@ -16,17 +16,17 @@ public class Shader {
     private int positionLoc;
     private int normalLoc;
 
-    private int lightPosLoc;
-    private int lightDirLoc;
-    private int lightFocLoc;
-    private int lightDifLoc;
+    private int lightPosLoc[];
+    private int lightDirLoc[];
+    private int lightFocLoc[];
+    private int lightDifLoc[];
     private int materialDifLoc;
     private int materialShineLoc;
     private int materialSpecularLoc;
     private int materialEmiLoc;
-    private int globalAttLoc;
-    private int linearAttLoc;
-    private int quadraticAttLoc;
+    private int constantAttLoc[];
+    private int linearAttLoc[];
+    private int quadraticAttLoc[];
 
     private int modelMatrixLoc;
     private int viewMatrixLoc;
@@ -36,6 +36,13 @@ public class Shader {
     private int eyePosLoc;
 
     Shader(){
+        lightPosLoc = new int[2];
+        lightDirLoc = new int[2];
+        lightFocLoc = new int[2];
+        lightDifLoc = new int[2];
+        constantAttLoc = new int[2];
+        linearAttLoc = new int[2];
+        quadraticAttLoc = new int[2];
         String vertexShaderString;
         String fragmentShaderString;
 
@@ -51,7 +58,7 @@ public class Shader {
         Gdx.gl.glCompileShader(vertexShaderID);
         Gdx.gl.glCompileShader(fragmentShaderID);
         
-//        Gdx.gl.glGetError();	// Use glGetShadeGetInfoLoc for more detailed errors.
+        Gdx.gl.glGetError();	// Use glGetShadeGetInfoLoc for more detailed errors.
 
         renderingProgramID = Gdx.gl.glCreateProgram();
 
@@ -71,20 +78,30 @@ public class Shader {
         projectionMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
         eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
-        lightPosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
-        lightDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse");
+        lightPosLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
+        lightDifLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse");
         materialDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
         materialShineLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
         materialEmiLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
-        lightDirLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
-        lightFocLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
-        globalAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAttenuation");
-        linearAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation");
-        quadraticAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation");
+        lightDirLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
+        lightFocLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
+        constantAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation");
+        linearAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation");
+        quadraticAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation");
 
+        lightPosLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition2");
+        lightDifLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse2");
+        lightDirLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection2");
+        lightFocLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus2");
+        constantAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation2");
+        linearAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation2");
+        quadraticAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation2");
+
+        Gdx.gl.glGetError();	// Use glGetShadeGetInfoLoc for more detailed errors.
         Gdx.gl.glUseProgram(renderingProgramID);
+        Gdx.gl.glGetError();	// Use glGetShadeGetInfoLoc for more detailed errors.
     }
 
     public void setMaterialDiffuse(float r, float g, float b, float a){
@@ -93,28 +110,28 @@ public class Shader {
 
 
 
-    public void setLightPosition(float x, float y, float z, float w){
-        Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
+    public void setLightPosition(float x, float y, float z, float w, int num){
+        Gdx.gl.glUniform4f(lightPosLoc[num], x, y, z, w);
     }
 
-    public void setLightDirection(float x, float y, float z, float w){
-        Gdx.gl.glUniform4f(lightDirLoc, x, y, z, w);
+    public void setLightDirection(float x, float y, float z, float w, int num){
+        Gdx.gl.glUniform4f(lightDirLoc[num], x, y, z, w);
     }
 
-    public void setFocus(float shine){
-        Gdx.gl.glUniform1f(lightFocLoc, shine);
+    public void setFocus(float shine, int num){
+        Gdx.gl.glUniform1f(lightFocLoc[num], shine);
     }
 
-    public void setGlobalAtt(float shine){
-        Gdx.gl.glUniform1f(globalAttLoc, shine);
+    public void setConstantAtt(float shine, int num){
+        Gdx.gl.glUniform1f(constantAttLoc[num], shine);
     }
 
-    public void setLinearAtt(float shine){
-        Gdx.gl.glUniform1f(linearAttLoc, shine);
+    public void setLinearAtt(float shine, int num){
+        Gdx.gl.glUniform1f(linearAttLoc[num], shine);
     }
 
-    public void setQuadraticAtt(float shine){
-        Gdx.gl.glUniform1f(quadraticAttLoc, shine);
+    public void setQuadraticAtt(float shine, int num){
+        Gdx.gl.glUniform1f(quadraticAttLoc[num], shine);
     }
 
     public void setMaterialEmission(float r, float g, float b, float a){
@@ -137,8 +154,8 @@ public class Shader {
         Gdx.gl.glUniform1f(materialShineLoc, shine);
     }
     
-    public void setLightDiffuse(float r, float g, float b, float a){
-        Gdx.gl.glUniform4f(lightDifLoc, r, g, b, a);
+    public void setLightDiffuse(float r, float g, float b, float a, int num){
+        Gdx.gl.glUniform4f(lightDifLoc[num], r, g, b, a);
     }
     
     public int getVertexPointer(){

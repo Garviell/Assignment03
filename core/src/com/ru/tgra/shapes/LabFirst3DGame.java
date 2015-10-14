@@ -18,7 +18,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private float deltaTime;
     private float angle;
-    private float fov = 90.0f;
+    private float fov = 80.0f;
     private int thingsLostWhenDeathOccurs = 2;
     //private ModelMatrix modelMatrix;
 
@@ -70,6 +70,15 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
         maze = new Maze();
+        shader.setGlobalAmbient(0.01f, 0.01f, 0.01f, 1.0f);
+        shader.setConstantAtt(0.1f, 0);
+        shader.setLinearAtt(0.15f, 0);
+        shader.setQuadraticAtt(0.0000f, 0);
+
+        shader.setConstantAtt(0.05f, 1);
+        shader.setLinearAtt(0.10f, 1);
+        shader.setQuadraticAtt(0.0000f, 1);
+        shader.setFocus(7, 1);
     }
 
     private void input() {
@@ -117,12 +126,13 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private void displayMoon(){
         player.display(shader);
-        shader.setMaterialDiffuse(0, 0, 0, 1);
+        shader.setLightDiffuse(0.8f, 0.8f,1.0f,0.0f, 0);
+        shader.setMaterialDiffuse(1, 1, 1, 1);
         shader.setMaterialSpecular(0, 0, 0, 1.0f);
-        shader.setLightPosition(-15, 20, 1, 1);
+        shader.setLightPosition(-15, 20, 1, 1, 0);
         shader.setMaterialEmission(1, 1, 1, 1);
-        shader.setLightDirection(15.2f, -10, 5, 1);
-        shader.setFocus(2);
+        shader.setLightDirection(15.2f, -10, 5, 1, 0);
+        shader.setFocus(2, 0);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(-15, 20, 1);
         ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
@@ -136,34 +146,33 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         if (player.isAlive()) {
             //do all actual drawing and rendering here
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-            shader.setGlobalAmbient(0.15f, 0.15f, 0.15f, 1.0f);
 
             for (int viewNum = 0; viewNum < 2; viewNum++) {
+                Camera camera = player.camera;
                 displayMoon();
                 if (viewNum == 0) {
+
                     player.score.display(shader, deltaTime);
                     drawFloor();
 //                    drawCeiling();
 
                 } else {
-                    shader.setLightDiffuse(1.0f, 1.0f,1.0f,1.0f);
-                    shader.setLightPosition(player.camera.eye.x, 10.0f, player.camera.eye.z, 0.0f);
-                    shader.setLightDirection(0, -1, 0, 1);
-                    shader.setFocus(1);
-                    shader.setEyePosition(player.camera.eye.x, 20.f, player.camera.eye.z, 1.0f);
+                    shader.setLightDiffuse(1.0f, 0.9f,1.0f,0.0f, 0);
+                    shader.setLightPosition(camera.eye.x, 10.0f, camera.eye.z, 0.0f, 0);
+                    shader.setLightDirection(0, -1, 0, 1, 0);
+                    shader.setFocus(1, 0);
+                    shader.setEyePosition(camera.eye.x, 20.f, camera.eye.z, 1.0f);
                     Gdx.gl.glViewport(0, 0, 200, 200);
 
-                    orthoCam.look(new Point3D(player.camera.eye.x, 35.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0, 0, -1));
+                    orthoCam.look(new Point3D(camera.eye.x, 35.0f, camera.eye.z), camera.eye, new Vector3D(0, 0, -1));
                     shader.setViewMatrix(orthoCam.getViewMatrix());
                     shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
+                    drawFloor();
                 }
 
                 shader.setShininess(10);
                 ModelMatrix.main.loadIdentityMatrix();
 
-                shader.setLightPosition(player.camera.eye.x, player.camera.eye.y, player.camera.eye.z, 1.0f);
-//                shader.setLightPosition(0.0f, 0.0f, 0.0f, 1.0f);
-                shader.setLightDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
 
 
                 ModelMatrix.main.pushMatrix();

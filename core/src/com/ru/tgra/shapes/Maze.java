@@ -100,7 +100,7 @@ public class Maze {
         boolean goOn = true;
         while (goOn) {
             for (Wall wall : check) {
-                if (intersects(cam, wall, deltaTime)) hit.add(wall);
+                if (intersects(cam, wall)) hit.add(wall);
             }
 
             if (!hit.isEmpty()) {
@@ -187,22 +187,18 @@ public class Maze {
         }
     }
 
-    public boolean intersects(Camera cam, Wall wall, float deltaTime) {
-        wall.distanceX = Math.abs(cam.eye.x - wall.posX);
-        wall.distanceZ = Math.abs(cam.eye.z - wall.posZ);
+    public boolean intersects(Camera cam, Wall wall) {
+        float distanceX = Math.abs(cam.eye.x - wall.posX);
+        float distanceZ = Math.abs(cam.eye.z - wall.posZ);
+        float buffer = 0.01f;
 
-        if (wall.distanceX > (wall.height / 2 + body - deltaTime)) return false;
-        if (wall.distanceZ > (wall.width / 2 + body - deltaTime)) return false;
-        float checkX = wall.distanceX;
-        float checkZ = wall.distanceZ;
+        if (distanceX > (wall.height / 2 + body - buffer) || distanceZ > (wall.width / 2 + body - buffer)) return false;
+        buffer = 0.11f;
 
-        wall.distanceX = (wall.height / 2 + body - deltaTime) - wall.distanceX;
-        wall.distanceZ = (wall.width / 2 + body - deltaTime) - wall.distanceZ;
+        wall.distanceX = (wall.height / 2 + body - buffer) - distanceX;
+        wall.distanceZ = (wall.width / 2 + body - buffer) - distanceZ;
 
-        if (checkX <= (wall.height / 2 + body - deltaTime)) {
-            return true;
-        }
-        return checkZ <= (wall.width / 2 + body - deltaTime);
+        return distanceX <= (wall.height / 2 + body) || distanceZ <= (wall.width / 2 + body);
 
     }
 

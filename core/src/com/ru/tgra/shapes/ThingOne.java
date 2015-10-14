@@ -50,12 +50,9 @@ public class ThingOne {
 	{
 		ModelMatrix.main.pushMatrix();
         shader.setMaterialDiffuse(1.0f, 0, 1.0f, 1.0f);
-//        shader.setMaterialDiffuse(1.0f, 0.8f, 0.8f, 1.0f);
-//        shader.setMaterialEmission(1.0f, 1.0f, 1.0f, 1.0f);
 		ModelMatrix.main.addTranslation(0, 0.5f, 0);
 		orientation.addRotationX(-0.1f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
-        shader.setLightDiffuse(1.0f, 0.6f, 0.6f, 1.0f);
 		ModelMatrix.main.addScale(0.3f, 0.3f, 0.3f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 public class Player {
     public Camera camera;
     private boolean alive;
+    private boolean flashlight;
     private float fov;
     public Score score;
     
@@ -15,6 +16,7 @@ public class Player {
         camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         this.fov = fov;
+        flashlight = false;
         alive = true;
         score = new Score(camera);
     }
@@ -30,7 +32,7 @@ public class Player {
 
     private void changeFov(float fov, float deltaTime){
     	if(fov < 0 && this.fov > 10.0f){ this.fov += fov * deltaTime; }
-    	if(fov > 0 && this.fov < 90.0f){ this.fov += fov * deltaTime; }
+    	if(fov > 0 && this.fov < 80.0f){ this.fov += fov * deltaTime; }
     }
 
     public float getFov(){
@@ -70,18 +72,29 @@ public class Player {
         if(Gdx.input.isKeyPressed(Input.Keys.G)) {
             changeFov(20.0f, deltaTime);
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            flashlight = !flashlight;
+        }
 
     }
 
     public void display(Shader shader){
+        if (flashlight){
+            shader.setLightDiffuse(1.0f, 1.0f,1.0f,1.0f, 1);
+        } else {
+            shader.setLightDiffuse(0.0f, 0.0f,0.0f,1.0f, 1);
+        }
+        flashlight(shader);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        shader.setLightDiffuse(0.1f, 0.1f, 0.1f, 1.0f);
-//       shader.setLightPosition(camera.eye.x + camera.v.x, camera.eye.y+3, camera.eye.z + camera.v.z, 1.0f);
         shader.setEyePosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f);
-//        shader.setLightDiffuse(1.0f, 0.8f, 1.0f, 1.0f);
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         shader.setViewMatrix(camera.getViewMatrix());
         shader.setProjectionMatrix(camera.getProjectionMatrix());
+    }
+
+    public void flashlight(Shader shader){
+        shader.setLightPosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f, 1);
+        shader.setLightDirection(-camera.n.x, -camera.n.y, -camera.n.z, 1, 1);
     }
 
     public void displayMap(Shader shader){
