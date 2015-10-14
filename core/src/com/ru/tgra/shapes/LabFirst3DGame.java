@@ -121,6 +121,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         shader.setMaterialSpecular(0, 0, 0, 1.0f);
         shader.setLightPosition(-15, 20, 1, 1);
         shader.setMaterialEmission(1, 1, 1, 1);
+        shader.setLightDirection(15.2f, -10, 5, 1);
+        shader.setFocus(2);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(-15, 20, 1);
         ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
@@ -146,6 +148,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 } else {
                     shader.setLightDiffuse(1.0f, 1.0f,1.0f,1.0f);
                     shader.setLightPosition(player.camera.eye.x, 10.0f, player.camera.eye.z, 0.0f);
+                    shader.setLightDirection(0, -1, 0, 1);
+                    shader.setFocus(1);
                     shader.setEyePosition(player.camera.eye.x, 20.f, player.camera.eye.z, 1.0f);
                     Gdx.gl.glViewport(0, 0, 200, 200);
 

@@ -17,11 +17,16 @@ public class Shader {
     private int normalLoc;
 
     private int lightPosLoc;
+    private int lightDirLoc;
+    private int lightFocLoc;
     private int lightDifLoc;
     private int materialDifLoc;
     private int materialShineLoc;
     private int materialSpecularLoc;
     private int materialEmiLoc;
+    private int globalAttLoc;
+    private int linearAttLoc;
+    private int quadraticAttLoc;
 
     private int modelMatrixLoc;
     private int viewMatrixLoc;
@@ -73,11 +78,45 @@ public class Shader {
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
         materialEmiLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
+        lightDirLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
+        lightFocLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
+        globalAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAttenuation");
+        linearAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation");
+        quadraticAttLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation");
 
         Gdx.gl.glUseProgram(renderingProgramID);
     }
 
-   
+    public void setMaterialDiffuse(float r, float g, float b, float a){
+        Gdx.gl.glUniform4f(materialDifLoc, r, g, b, a);
+    }
+
+
+
+    public void setLightPosition(float x, float y, float z, float w){
+        Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
+    }
+
+    public void setLightDirection(float x, float y, float z, float w){
+        Gdx.gl.glUniform4f(lightDirLoc, x, y, z, w);
+    }
+
+    public void setFocus(float shine){
+        Gdx.gl.glUniform1f(lightFocLoc, shine);
+    }
+
+    public void setGlobalAtt(float shine){
+        Gdx.gl.glUniform1f(globalAttLoc, shine);
+    }
+
+    public void setLinearAtt(float shine){
+        Gdx.gl.glUniform1f(linearAttLoc, shine);
+    }
+
+    public void setQuadraticAtt(float shine){
+        Gdx.gl.glUniform1f(quadraticAttLoc, shine);
+    }
+
     public void setMaterialEmission(float r, float g, float b, float a){
         Gdx.gl.glUniform4f(materialEmiLoc, r, g, b, a);
     }
@@ -97,18 +136,9 @@ public class Shader {
     public void setShininess(float shine){
         Gdx.gl.glUniform1f(materialShineLoc, shine);
     }
-
-
-    public void setLightPosition(float x, float y, float z, float w){
-        Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
-    }
     
     public void setLightDiffuse(float r, float g, float b, float a){
         Gdx.gl.glUniform4f(lightDifLoc, r, g, b, a);
-    }
-    
-    public void setMaterialDiffuse(float r, float g, float b, float a){
-        Gdx.gl.glUniform4f(materialDifLoc, r, g, b, a);
     }
     
     public int getVertexPointer(){
