@@ -16,6 +16,8 @@ public class Shader {
     private int positionLoc;
     private int normalLoc;
     private int lightPosLoc;
+    private int lightDirLoc;
+    private int lightFocLoc;
     private int lightDifLoc;
     private int materialDifLoc;
     private int materialShineLoc;
@@ -70,6 +72,8 @@ public class Shader {
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
         materialEmiLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
+        lightDirLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
+        lightFocLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
 
         Gdx.gl.glUseProgram(renderingProgramID);
     }
@@ -83,6 +87,15 @@ public class Shader {
     public void setLightPosition(float x, float y, float z, float w){
         Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
     }
+
+    public void setLightDirection(float x, float y, float z, float w){
+        Gdx.gl.glUniform4f(lightDirLoc, x, y, z, w);
+    }
+
+    public void setFocus(float shine){
+        Gdx.gl.glUniform1f(lightFocLoc, shine);
+    }
+
     public void setMaterialEmission(float r, float g, float b, float a){
         Gdx.gl.glUniform4f(materialEmiLoc, r, g, b, a);
     }

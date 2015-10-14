@@ -33,7 +33,7 @@ public class DeadlyFloor {
 
     public void display(Shader shader, float deltatime) {
         update(deltatime);
-        shader.setMaterialDiffuse(Math.max(1 * color, 0.333333f), 0.333333f * (1 - color), 0.333333f * (1 - color), color);
+        shader.setMaterialDiffuse(Math.max(1 * color, 0.333333f), 0.333333f * (1 - color), 0.333333f * (1 - color), 1);
         shader.setMaterialSpecular(1.0f, 0.9f, 0.9f, 1.0f);
         shader.setShininess(1030);
         ModelMatrix.main.pushMatrix();

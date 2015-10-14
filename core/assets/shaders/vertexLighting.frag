@@ -5,6 +5,8 @@ precision mediump float;
 
 uniform vec4 u_lightDiffuse;
 uniform vec4 u_globalAmbient;
+uniform vec4 u_lightDirection;
+uniform float u_lightFocus;
 
 uniform vec4 u_materialDiffuse;
 uniform vec4 u_materialSpecular;
@@ -20,6 +22,7 @@ void main()
 	float phong = max(0, dot(v_normal,v_h) / (length(v_normal) * length(v_h)));
 	vec4 diffuseColor = lambert * u_lightDiffuse * u_materialDiffuse;
 	vec4 specularColor = pow(phong, u_materialShininess) * u_lightDiffuse * u_materialSpecular;
-	vec4 lightCalcColor = diffuseColor + specularColor;
+	float spotAttenuation = pow(max(0, dot(-v_s, u_lightDirection) / (length(v_s) * length(u_lightDirection))), u_lightFocus);
+	vec4 lightCalcColor = spotAttenuation * (diffuseColor + specularColor);
 	gl_FragColor =  u_globalAmbient * u_materialDiffuse + lightCalcColor + u_materialEmission;
 }

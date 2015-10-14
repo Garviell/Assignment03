@@ -16,8 +16,6 @@ public class Pill {
 	
 	public void display(Shader shader, float deltaTime)
 	{
-
-
         shader.setMaterialSpecular(0.4f, 0.4f, 0.4f, 1.0f);
         shader.setMaterialDiffuse(0, 0.35f, 0.6f, 1.0f);
         shader.setShininess(130);
