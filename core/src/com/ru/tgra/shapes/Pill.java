@@ -18,7 +18,7 @@ public class Pill {
 	{
 
 
-        shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+        shader.setMaterialSpecular(0.4f, 0.4f, 0.4f, 1.0f);
         shader.setMaterialDiffuse(0, 0.35f, 0.6f, 1.0f);
         shader.setShininess(130);
 		ModelMatrix.main.pushMatrix();
@@ -30,6 +30,8 @@ public class Pill {
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
         shader.setMaterialDiffuse(0, 0.6f, 0.8f, 1.0f);
+		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setShininess(30);
 		ModelMatrix.main.addScale(1.01f, 1.01f, 1.01f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawOutlineSphere();
