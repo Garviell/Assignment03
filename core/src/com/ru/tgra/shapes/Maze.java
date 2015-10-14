@@ -12,7 +12,7 @@ public class Maze {
     private Cell[][] cell;
     private int numDoors;
     private Door[] doors;
-    private int numPills = 10;
+    private int numPills;
     private int numDeadlyFloors;
 
 
@@ -39,6 +39,7 @@ public class Maze {
         }
 
         int n = 0;
+        numPills = 10;
         while (n < numPills) {
             int x = random.nextInt(20);
             int z = random.nextInt(20);
@@ -53,7 +54,7 @@ public class Maze {
             int x = random.nextInt(20);
             int z = random.nextInt(20);
             if (cell[x][z].deadly == null) {
-                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.1f);
+                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.3f);
             }
         }
 

@@ -3,6 +3,7 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.Model;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
@@ -115,16 +116,32 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
     }
 
+    private void displayMoon(){
+        player.display(shader);
+        shader.setMaterialDiffuse(0, 0, 0, 1);
+        shader.setMaterialSpecular(0, 0, 0, 1.0f);
+        shader.setLightPosition(-15, 20, 1, 1);
+        shader.setMaterialEmission(1, 1, 1, 1);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(-15, 20, 1);
+        ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        SphereGraphic.drawSolidSphere();
+        shader.setMaterialEmission(0, 0, 0, 1);
+        ModelMatrix.main.popMatrix();
+    }
+
     private void display() {
         if (player.isAlive()) {
             //do all actual drawing and rendering here
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
             shader.setGlobalAmbient(0.15f, 0.15f, 0.15f, 1.0f);
-            shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+
             for (int viewNum = 0; viewNum < 2; viewNum++) {
-                thingOne.display(shader, deltaTime);
+                displayMoon();
+//                thingOne.display(shader, deltaTime);
                 if (viewNum == 0) {
-                    player.display(shader);
+                    player.score.display(shader, deltaTime);
                     drawFloor();
 //                    drawCeiling();
                     //drawCeiling();
@@ -156,7 +173,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
                 maze.displayDoors(shader, deltaTime);
                 
-                player.score.display(shader, deltaTime);
 
 
                 // Mini-map
@@ -185,8 +201,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     public void drawFloor() {
-        shader.setMaterialDiffuse(0.33333f, 0.133333f, 0.183333f, 1.0f);
-        shader.setMaterialSpecular(0.003333f, 0.003333f, 0.033333f, 1.0f);
+        shader.setMaterialDiffuse(0.13333f, 0.133333f, 0.183333f, 1.0f);
+        shader.setMaterialSpecular(0.013333f, 0.013333f, 0.133333f, 1.0f);
         shader.setShininess(30);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
