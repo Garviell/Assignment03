@@ -15,7 +15,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private Shader shader;
 
     private Maze maze;
-    private ThingOne thingOne;
 
     private float deltaTime;
     private float angle;
@@ -43,8 +42,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, modelMatrixBuffer);
 */
-        //COLOR IS SET HERE
-        shader.setColor(0.7f, 0.2f, 0, 1);
 
         BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
         SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
@@ -68,7 +65,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
         maze = new Maze();
-        thingOne = new ThingOne();
     }
 
     private void input() {
@@ -114,6 +110,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
                 ModelMatrix.main.loadIdentityMatrix();
 
+                shader.setLightPosition(player.camera.eye.x, player.camera.eye.y, player.camera.eye.z, 1.0f);
+//                shader.setLightPosition(0.0f, 0.0f, 0.0f, 1.0f);
+                shader.setLightDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+
 
                 ModelMatrix.main.pushMatrix();
 
@@ -122,11 +122,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 ModelMatrix.main.popMatrix();
 
 
-                shader.setColor(1.0f, 0, 0, 1.0f);
+                shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
 
                 maze.displayDoors(shader, deltaTime);
                 
-                player.score.display(shader, deltaTime);
+                player.score.display(shader, deltaTime, player.camera);
 
 
                 // Mini-map
@@ -155,7 +155,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     public void drawFloor() {
-        Gdx.gl.glUniform4f(colorLoc, 0.333333f, 0.333333f, 0.333333f, 1.0f);
+    	shader.setMaterialDiffuse(0.333333f, 0.333333f, 0.333333f, 1);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
         ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
@@ -165,7 +165,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     public void drawCeiling() {
-        Gdx.gl.glUniform4f(colorLoc, 0.5f, 0.3f, 1.0f, 1.0f);
+    	shader.setMaterialDiffuse(0.5f, 0.3f, 1.0f, 1.0f);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
         ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);
@@ -178,7 +178,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     {
     	for(int i = 0; i < thingsLostWhenDeathOccurs; i++)
         {
-            if(player.score.numberOfThings > 0)
+            if(player.score.numScore > 0)
             {
             	player.score.removething();
             }

@@ -1,35 +1,30 @@
-package com.ru.tgra.shapes;
+	package com.ru.tgra.shapes;
 
 import java.util.ArrayList;
 
 public class Score {
-	public ThingOne[] things = new ThingOne[10];
-	public int numberOfThings;
+	public ThingOne theThing;
+	public int numScore;
 	
-	Score()
+	Score(Camera camera)
 	{
-		numberOfThings = 0;
+		theThing = new ThingOne();
+		numScore = 0;
 	}
 	
 	public void addThing()
 	{
-		numberOfThings++;
-		things[numberOfThings] = new ThingOne();
-        System.out.println(numberOfThings);
+		numScore++;
 	}
 	
 	public void removething()
 	{
-		things[numberOfThings] = null;
-		numberOfThings--;
+		numScore--;
 	}
 	
-	public void display(Shader shader, float deltaTime)
+	public void display(Shader shader, float deltaTime, Camera camera)
 	{
-		for(int i = 0; i < numberOfThings; i++)
-		{
-			things[numberOfThings].display(shader, deltaTime);
-		}
+		theThing.display(shader, deltaTime, numScore);
 	}
 
 	

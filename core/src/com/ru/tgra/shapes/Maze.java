@@ -14,7 +14,7 @@ public class Maze {
     private Cell[][] cell;
     private int numDoors;
     private Door[] doors;
-    private int numPills = 10;
+    private int numPills = 16;
     private int numDeadlyFloors;
 
 
@@ -67,7 +67,7 @@ public class Maze {
         ModelMatrix.main.pushMatrix();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                shader.setColor(0.55f, 0.53f, 0.5f, 1.0f);
+                shader.setMaterialDiffuse(0.55f, 0.53f, 0.5f, 1.0f);
                 cell[i][j].display(shader);
                 if (cell[i][j].pill != null) cell[i][j].pill.display(shader, deltaTime);
                 if (cell[i][j].deadly != null) cell[i][j].deadly.display(shader, deltaTime);

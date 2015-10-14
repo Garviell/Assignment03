@@ -16,7 +16,7 @@ public class Player {
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         this.fov = fov;
         alive = true;
-        score = new Score();
+        score = new Score(camera);
     }
 
 
@@ -81,7 +81,7 @@ public class Player {
     }
 
     public void displayMap(Shader shader){
-        shader.setColor(1.0f, 0.3f, 0.1f, 1.0f);
+        shader.setMaterialDiffuse(1.0f, 0.3f, 0.1f, 1.0f);
 
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(camera.eye.x, camera.eye.y, camera.eye.z);

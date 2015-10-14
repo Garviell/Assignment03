@@ -61,7 +61,7 @@ public class Door {
 	
 	public void display(Shader shader)
 	{
-        shader.setColor(1.0f, 0, 0, 1.0f);
+        shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
 
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(posX, 0, posZ);

@@ -147,8 +147,8 @@ public class Camera {
 
         matrixBuffer.put(pm);
         matrixBuffer.rewind();
+        
         return matrixBuffer;
-
     }
 
     public FloatBuffer getProjectionMatrix(){
