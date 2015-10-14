@@ -80,6 +80,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 Gdx.graphics.setDisplayMode(width, height, fullScreen);
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            maze.reset();
+            maze.moreDeath();
+        }
 
     }
 

@@ -249,6 +249,39 @@ public class Maze {
 
     }
 
+    public void reset(){
+        for (Cell[] row: this.cell){
+            for (Cell c : row){
+                c.randomize();
+            }
+
+        }
+        numDoors = 20;
+        doors = new Door[numDoors];
+        random = new Random();
+        for (int i = 0; i < numDoors; i++) {
+            int x = random.nextInt(20);
+            int z = random.nextInt(20);
+            if (this.cell[x][z].northWall == null && !this.cell[x][z].door) {
+                doors[i] = new Door(this.cell[x][z]);
+                this.cell[x][z].door = true;
+            }
+        }
+
+    }
+
+    public void moreDeath(){
+        numDeadlyFloors += (numDeadlyFloors/2);
+        for (int i = 0; i < numDeadlyFloors; i++) {
+            int x = random.nextInt(20);
+            int z = random.nextInt(20);
+            if (cell[x][z].deadly == null) {
+                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.3f);
+            }
+        }
+
+    }
+
     //Check if you are on a pill.
     public void checkPill(Camera cam, Cell cell, Player player) {
         float x0 = cam.eye.x;
@@ -258,23 +291,7 @@ public class Maze {
         if (Math.pow(x0 - x1, 2) + Math.pow(z1 - z0, 2) <= Math.pow((body - 0.06f), 2)) {
             cell.pill = null;
             player.score.addThing();
-            for (Cell[] row: this.cell){
-                for (Cell c : row){
-                    c.randomize();
-                }
-
-            }
-            numDoors = 20;
-            doors = new Door[numDoors];
-            random = new Random();
-            for (int i = 0; i < numDoors; i++) {
-                int x = random.nextInt(20);
-                int z = random.nextInt(20);
-                if (this.cell[x][z].northWall == null && !this.cell[x][z].door) {
-                    doors[i] = new Door(this.cell[x][z]);
-                    this.cell[x][z].door = true;
-                }
-            }
+            reset();
         }
 
     }
