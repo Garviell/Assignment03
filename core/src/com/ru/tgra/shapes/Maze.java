@@ -16,6 +16,9 @@ public class Maze {
     private int numDeadlyFloors;
 
 
+    /*
+     * A very simple maze that is entirely randomly generated with no smart maze generation
+     */
     public Maze() {
         col = 20;
         row = 20;
@@ -102,7 +105,6 @@ public class Maze {
             for (Wall wall : check) {
                 if (intersects(cam, wall)) hit.add(wall);
             }
-
             if (!hit.isEmpty()) {
                 float minHit = Float.MAX_VALUE;
                 Wall minHitWall = null;
@@ -165,7 +167,7 @@ public class Maze {
 
             }
         }
-        // Deal with the corners
+        // Deal with the corners.. Sort off.
         else if (cam.eye.x <= 0 && cam.eye.x > -1 || cam.eye.x >= 20 && cam.eye.x < 21
                 || cam.eye.z <= 0 && cam.eye.z > -1 || cam.eye.z >= 20 && cam.eye.z < 21) {
             for (int i = eyex - 1; i < eyex + 2; i++) {
@@ -173,13 +175,13 @@ public class Maze {
                     try {
                         if (cell[i][j].northWall != null) check.add(cell[i][j].northWall);
                     } catch (ArrayIndexOutOfBoundsException aioobe) {
-                        // It's fine, just carry on
+                        // It's fine, just carry on, Nothing to see here
                     }
 
                     try {
                         if (cell[i][j].eastWall != null) check.add(cell[i][j].eastWall);
                     } catch (ArrayIndexOutOfBoundsException aioobe) {
-                        // It's fine, just carry on
+                        // It's fine, just carry on, Nothing to see here
                     }
 
                 }
@@ -187,6 +189,7 @@ public class Maze {
         }
     }
 
+    //This functionality should largely be in the wall class but we decided to focus on fancier shaders instead
     public boolean intersects(Camera cam, Wall wall) {
         float distanceX = Math.abs(cam.eye.x - wall.posX);
         float distanceZ = Math.abs(cam.eye.z - wall.posZ);
@@ -199,9 +202,10 @@ public class Maze {
         wall.distanceZ = (wall.width / 2 + body - buffer) - distanceZ;
 
         return distanceX <= (wall.height / 2 + body) || distanceZ <= (wall.width / 2 + body);
-
     }
 
+    //To slide the camera along the wall.
+    //Has some hiches because of how we construct the maze out of small pieces.
     public void moveCamera(Camera cam, Wall minHitWall, String xz) {
         if (xz.equals("X")) {
             if (cam.eye.x < minHitWall.posX) {
@@ -220,6 +224,7 @@ public class Maze {
         }
     }
 
+    //Door that kills you,  pretty basic
     public void doorCollision(Player player, Camera cam, Door door) {
         float distanceZ = Math.abs(cam.eye.z - door.endZ);
 
@@ -244,6 +249,7 @@ public class Maze {
 
     }
 
+    //Check if you are on a pill.
     public void checkPill(Camera cam, Cell cell, Player player) {
         float x0 = cam.eye.x;
         float z0 = cam.eye.z;
@@ -252,10 +258,28 @@ public class Maze {
         if (Math.pow(x0 - x1, 2) + Math.pow(z1 - z0, 2) <= Math.pow((body - 0.06f), 2)) {
             cell.pill = null;
             player.score.addThing();
+            for (Cell[] row: this.cell){
+                for (Cell c : row){
+                    c.randomize();
+                }
+
+            }
+            numDoors = 20;
+            doors = new Door[numDoors];
+            random = new Random();
+            for (int i = 0; i < numDoors; i++) {
+                int x = random.nextInt(20);
+                int z = random.nextInt(20);
+                if (this.cell[x][z].northWall == null && !this.cell[x][z].door) {
+                    doors[i] = new Door(this.cell[x][z]);
+                    this.cell[x][z].door = true;
+                }
+            }
         }
 
     }
 
+    //Going off board is lethal
     public void outOfBoard(Player player) {
         Camera cam = player.camera;
         if (cam.eye.x < -1.6f || cam.eye.x > 21.6f || cam.eye.z < -1.6f || cam.eye.z > 21.6f) {

@@ -32,4 +32,11 @@ public class Cell {
 			eastWall.draw(shader);
 		}
 	}
+
+	public void randomize(){
+		northWall = null;
+		eastWall = null;
+		if(random.nextBoolean()) northWall = new Wall(row+1.0f, col+0.5f, 1.1f, 0.1f);
+		if(random.nextBoolean()) eastWall = new Wall(row+0.5f, col+1.0f, 0.1f, 1.1f);
+	}
 }
