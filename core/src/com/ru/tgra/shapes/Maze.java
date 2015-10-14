@@ -71,7 +71,7 @@ public class Maze {
             }
         }
         ModelMatrix.main.popMatrix();
-        
+
 
     }
 
@@ -221,7 +221,6 @@ public class Maze {
     }
 
     public void doorCollision(Player player, Camera cam, Door door) {
-        float distanceX = Math.abs(cam.eye.x - door.endX);
         float distanceZ = Math.abs(cam.eye.z - door.endZ);
 
         if (door.distanceZ < door.distanceX) {

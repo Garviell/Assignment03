@@ -1,7 +1,5 @@
 package com.ru.tgra.shapes;
 
-import java.util.Random;
-
 public class ThingOne {
 	public ModelMatrix orientation;
 	public float posX = 10.f;
@@ -28,10 +26,12 @@ public class ThingOne {
 		
 		ModelMatrix.main.pushMatrix();
         shader.setMaterialDiffuse(0, 0.9f, 0, 1.0f);
+        shader.setMaterialEmission(0.1f, 0.3f, 0.1f, 1.0f);
 		orientation.addRotationY(0.3f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawOutlineSphere();
+        shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
 		ModelMatrix.main.popMatrix();
 
 		core(shader, deltaTime);
@@ -65,12 +65,14 @@ public class ThingOne {
 	{
 		ModelMatrix.main.pushMatrix();
         shader.setMaterialDiffuse(0, 0, 1.0f, 1.0f);
+		shader.setMaterialEmission(0.5f, 0.5f, 1, 1.0f);
 		orientation.addRotationY(0.1f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
 		ModelMatrix.main.addTranslation(x, y, z);
 		ModelMatrix.main.addScale(0.4f, 0.4f, 0.4f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
+		shader.setMaterialEmission(0.0f, 0.0f, 0, 1.0f);
 		ModelMatrix.main.popMatrix();
 	}
 	

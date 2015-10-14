@@ -7,19 +7,17 @@ import com.badlogic.gdx.utils.BufferUtils;
 
 public class Camera {
 	public Point3D eye;
-	Vector3D n;
-	Vector3D u;
-	Vector3D v;
-	boolean orthographic;
-	float top;
-	float bottom;
-	float right;
-	float left;
-	float near;
-	float far;
+	public Vector3D n;
+	public Vector3D u;
+	public Vector3D v;
+	private boolean orthographic;
+	private float top;
+	private float bottom;
+	private float right;
+	private float left;
+	private float near;
+	private float far;
 	private FloatBuffer matrixBuffer;
-	private int viewMatrixPointer;
-	private int projectionMatrixPointer;
 
 	public Camera()
 	{
@@ -63,7 +61,7 @@ public class Camera {
 		//eye.y += delU*u.y + delV*v.y + delN*n.y;
 		eye.z += delU*u.z + delV*v.z + delN*n.z;
 	}
-	
+
 	public void walk(float del)
 	{
 		eye.x -= del*n.x;
@@ -91,13 +89,13 @@ public class Camera {
 		u.set(t.x * c - n.x * s, t.y * c - n.y * s, t.z * c - n.z * s);
 		n.set(t.x * s + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
 	}
-	
+
 	public void rotateY(float angle)	//Rotation around the y axis
 	{
 		float radians = angle * (float)Math.PI / 180.0f;
 		float c = (float)Math.cos(radians);
 		float s = -(float)Math.sin(radians);
-		
+
 		u.set(c * u.x - s * u.z , u.y, s * u.x + c * u.z);
 		v.set(c * v.x - s * v.z , v.y, s * v.x + c * v.z);
 		n.set(c * n.x - s * n.z , n.y, s * n.x + c * n.z);
@@ -147,7 +145,7 @@ public class Camera {
 
         matrixBuffer.put(pm);
         matrixBuffer.rewind();
-        
+
         return matrixBuffer;
     }
 

@@ -3,11 +3,8 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g3d.Model;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
-
-    private int colorLoc;
 
     private Player player;
     private Camera orthoCam;
@@ -20,7 +17,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private float angle;
     private float fov = 80.0f;
     private int thingsLostWhenDeathOccurs = 2;
-    //private ModelMatrix modelMatrix;
 
     @Override
     public void create() {
@@ -31,20 +27,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
         Gdx.input.setInputProcessor(this);
 
-/*
-        float[] mm = new float[16];
-
-		mm[0] = 1.0f; mm[4] = 0.0f; mm[8] = 0.0f; mm[12] = 0.0f;
-		mm[1] = 0.0f; mm[5] = 1.0f; mm[9] = 0.0f; mm[13] = 0.0f;
-		mm[2] = 0.0f; mm[6] = 0.0f; mm[10] = 1.0f; mm[14] = 0.0f;
-		mm[3] = 0.0f; mm[7] = 0.0f; mm[11] = 0.0f; mm[15] = 1.0f;
-
-		modelMatrixBuffer = BufferUtils.newFloatBuffer(16);
-		modelMatrixBuffer.put(mm);
-		modelMatrixBuffer.rewind();
-
-		Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, modelMatrixBuffer);
-*/
         //COLOR IS SET HERE
         shader.setMaterialDiffuse(0.7f, 0.2f, 0, 1);
 
@@ -60,9 +42,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-
-        //OrthographicProjection3D(-2, 2, -2, 2, 1, 100);
-        //PerspctiveProjection3D();
 
         //Camera
         player = new Player(fov);
@@ -82,14 +61,14 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     private void input() {
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setDisplayMode(500, 500, false);
             Gdx.app.exit();
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
-            if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 int width, height;
-                if(fullScreen){
+                if (fullScreen) {
                     width = 1280;
                     height = 1024;
                 } else {
@@ -124,9 +103,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void displayMoon(){
+    private void displayMoon() {
         player.display(shader);
-        shader.setLightDiffuse(0.8f, 0.8f,1.0f,0.0f, 0);
+        shader.setLightDiffuse(0.8f, 0.8f, 1.0f, 0.0f, 0);
         shader.setMaterialDiffuse(1, 1, 1, 1);
         shader.setMaterialSpecular(0, 0, 0, 1.0f);
         shader.setLightPosition(-15, 20, 1, 1, 0);
@@ -154,10 +133,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
                     player.score.display(shader, deltaTime);
                     drawFloor();
-//                    drawCeiling();
 
                 } else {
-                    shader.setLightDiffuse(1.0f, 0.9f,1.0f,0.0f, 0);
+                    shader.setLightDiffuse(1.0f, 0.9f, 1.0f, 0.0f, 0);
                     shader.setLightPosition(camera.eye.x, 10.0f, camera.eye.z, 0.0f, 0);
                     shader.setLightDirection(0, -1, 0, 1, 0);
                     shader.setFocus(1, 0);
@@ -174,7 +152,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 ModelMatrix.main.loadIdentityMatrix();
 
 
-
                 ModelMatrix.main.pushMatrix();
 
 
@@ -184,9 +161,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
 
                 maze.displayDoors(shader, deltaTime);
-                
-                player.score.display(shader, deltaTime);
 
+                player.score.display(shader, deltaTime);
 
                 // Mini-map
                 if (viewNum == 1) {
@@ -234,14 +210,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
     }
-    
-    public void loseThings()
-    {
-    	for(int i = 0; i < thingsLostWhenDeathOccurs; i++)
-        {
-            if(player.score.numScore > 0)
-            {
-            	player.score.removething();
+
+    public void loseThings() {
+        for (int i = 0; i < thingsLostWhenDeathOccurs; i++) {
+            if (player.score.numScore > 0) {
+                player.score.removething();
             }
         }
     }
