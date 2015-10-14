@@ -75,6 +75,10 @@ public class Player {
 
     public void display(Shader shader){
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        shader.setLightDiffuse(0.1f, 0.1f, 0.1f, 1.0f);
+//       shader.setLightPosition(camera.eye.x + camera.v.x, camera.eye.y+3, camera.eye.z + camera.v.z, 1.0f);
+        shader.setEyePosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f);
+//        shader.setLightDiffuse(1.0f, 0.8f, 1.0f, 1.0f);
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         shader.setViewMatrix(camera.getViewMatrix());
         shader.setProjectionMatrix(camera.getProjectionMatrix());
@@ -82,7 +86,6 @@ public class Player {
 
     public void displayMap(Shader shader){
         shader.setMaterialDiffuse(1.0f, 0.3f, 0.1f, 1.0f);
-
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(camera.eye.x, camera.eye.y, camera.eye.z);
         ModelMatrix.main.addScale(0.25f, 0.25f, 0.25f);

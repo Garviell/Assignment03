@@ -1,10 +1,9 @@
 package com.ru.tgra.shapes;
 
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.Model;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
@@ -13,6 +12,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private Player player;
     private Camera orthoCam;
     private Shader shader;
+    private boolean fullScreen;
 
     private Maze maze;
 
@@ -24,6 +24,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     @Override
     public void create() {
+        fullScreen = true;
+        Graphics.DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
+        Gdx.graphics.setDisplayMode(disp.width, disp.height, fullScreen);
         shader = new Shader();
 
         Gdx.input.setInputProcessor(this);
@@ -42,6 +45,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, modelMatrixBuffer);
 */
+        //COLOR IS SET HERE
+        shader.setMaterialDiffuse(0.7f, 0.2f, 0, 1);
 
         BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
         SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
@@ -68,6 +73,25 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     private void input() {
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            Gdx.graphics.setDisplayMode(500, 500, false);
+            Gdx.app.exit();
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
+            if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+                int width, height;
+                if(fullScreen){
+                    width = 1280;
+                    height = 1024;
+                } else {
+                    Graphics.DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
+                    width = disp.width;
+                    height = disp.height;
+                }
+                fullScreen = !fullScreen;
+                Gdx.graphics.setDisplayMode(width, height, fullScreen);
+            }
+        }
 
     }
 
@@ -91,23 +115,46 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
     }
 
+    private void displayMoon(){
+        player.display(shader);
+        shader.setMaterialDiffuse(0, 0, 0, 1);
+        shader.setMaterialSpecular(0, 0, 0, 1.0f);
+        shader.setLightPosition(-15, 20, 1, 1);
+        shader.setMaterialEmission(1, 1, 1, 1);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(-15, 20, 1);
+        ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        SphereGraphic.drawSolidSphere();
+        shader.setMaterialEmission(0, 0, 0, 1);
+        ModelMatrix.main.popMatrix();
+    }
+
     private void display() {
         if (player.isAlive()) {
             //do all actual drawing and rendering here
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+            shader.setGlobalAmbient(0.15f, 0.15f, 0.15f, 1.0f);
+
             for (int viewNum = 0; viewNum < 2; viewNum++) {
+                displayMoon();
                 if (viewNum == 0) {
-                    player.display(shader);
+                    player.score.display(shader, deltaTime);
                     drawFloor();
-                    //drawCeiling();
+//                    drawCeiling();
 
                 } else {
+                    shader.setLightDiffuse(1.0f, 1.0f,1.0f,1.0f);
+                    shader.setLightPosition(player.camera.eye.x, 10.0f, player.camera.eye.z, 0.0f);
+                    shader.setEyePosition(player.camera.eye.x, 20.f, player.camera.eye.z, 1.0f);
                     Gdx.gl.glViewport(0, 0, 200, 200);
+
                     orthoCam.look(new Point3D(player.camera.eye.x, 35.0f, player.camera.eye.z), player.camera.eye, new Vector3D(0, 0, -1));
                     shader.setViewMatrix(orthoCam.getViewMatrix());
                     shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
                 }
 
+                shader.setShininess(10);
                 ModelMatrix.main.loadIdentityMatrix();
 
                 shader.setLightPosition(player.camera.eye.x, player.camera.eye.y, player.camera.eye.z, 1.0f);
@@ -121,12 +168,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 maze.display(shader, deltaTime);
                 ModelMatrix.main.popMatrix();
 
-
                 shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
 
                 maze.displayDoors(shader, deltaTime);
                 
-                player.score.display(shader, deltaTime, player.camera);
+                player.score.display(shader, deltaTime);
 
 
                 // Mini-map
@@ -155,7 +201,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     public void drawFloor() {
-    	shader.setMaterialDiffuse(0.333333f, 0.333333f, 0.333333f, 1);
+        shader.setMaterialDiffuse(0.13333f, 0.133333f, 0.183333f, 1.0f);
+        shader.setMaterialSpecular(0.013333f, 0.013333f, 0.133333f, 1.0f);
+        shader.setShininess(30);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
         ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
@@ -165,7 +213,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     public void drawCeiling() {
-    	shader.setMaterialDiffuse(0.5f, 0.3f, 1.0f, 1.0f);
+        shader.setMaterialDiffuse(0.5f, 0.3f, 1.0f, 1.0f);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
         ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);

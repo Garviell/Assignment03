@@ -22,7 +22,7 @@ public class Score {
 		numScore--;
 	}
 	
-	public void display(Shader shader, float deltaTime, Camera camera)
+	public void display(Shader shader, float deltaTime)
 	{
 		theThing.display(shader, deltaTime, numScore);
 	}

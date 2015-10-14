@@ -21,7 +21,6 @@ public class ThingOne {
 	
 	public void display(Shader shader, float deltaTime, int numScore)
 	{
-	
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTransformation(orientation.matrix);
 
@@ -50,15 +49,18 @@ public class ThingOne {
 	public void core(Shader shader, float deltaTime)
 	{
 		ModelMatrix.main.pushMatrix();
-
         shader.setMaterialDiffuse(1.0f, 0, 1.0f, 1.0f);
+//        shader.setMaterialDiffuse(1.0f, 0.8f, 0.8f, 1.0f);
+//        shader.setMaterialEmission(1.0f, 1.0f, 1.0f, 1.0f);
 		ModelMatrix.main.addTranslation(0, 0.5f, 0);
-//		orientation.addRotationX(-0.1f * deltaTime);
+		orientation.addRotationX(-0.1f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
+        shader.setLightDiffuse(1.0f, 0.6f, 0.6f, 1.0f);
 		ModelMatrix.main.addScale(0.3f, 0.3f, 0.3f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
 		BoxGraphic.drawSolidCube();
-		
+
 		ModelMatrix.main.popMatrix();
 	}
 	
@@ -66,7 +68,7 @@ public class ThingOne {
 	{
 		ModelMatrix.main.pushMatrix();
         shader.setMaterialDiffuse(0, 0, 1.0f, 1.0f);
-//		orientation.addRotationY(0.1f * deltaTime);
+		orientation.addRotationY(0.1f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
 		ModelMatrix.main.addTranslation(x, y, z);
 		ModelMatrix.main.addScale(0.4f, 0.4f, 0.4f);

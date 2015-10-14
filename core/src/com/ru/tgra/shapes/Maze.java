@@ -3,8 +3,6 @@ package com.ru.tgra.shapes;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-
 public class Maze {
     public int score;
     Random random;
@@ -55,7 +53,7 @@ public class Maze {
             int x = random.nextInt(20);
             int z = random.nextInt(20);
             if (cell[x][z].deadly == null) {
-                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.1f);
+                cell[x][z].deadly = new DeadlyFloor(x, z, 0.9f, 0.3f);
             }
         }
 
@@ -67,7 +65,6 @@ public class Maze {
         ModelMatrix.main.pushMatrix();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                shader.setMaterialDiffuse(0.55f, 0.53f, 0.5f, 1.0f);
                 cell[i][j].display(shader);
                 if (cell[i][j].pill != null) cell[i][j].pill.display(shader, deltaTime);
                 if (cell[i][j].deadly != null) cell[i][j].deadly.display(shader, deltaTime);
@@ -79,6 +76,8 @@ public class Maze {
     }
 
     public void displayDoors(Shader shader, float deltaTime) {
+        shader.setMaterialSpecular(0.1f, 0.0f, 0.0f, 1.0f);
+        shader.setShininess(1030);
         for (int i = 0; i < numDoors; i++) {
             if (doors[i] != null) {
                 doors[i].update(deltaTime);
