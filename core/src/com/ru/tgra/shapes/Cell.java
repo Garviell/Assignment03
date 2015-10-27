@@ -17,8 +17,8 @@ public class Cell {
 	{
 		row = i;
 		col = j;
-		if(random.nextBoolean()) northWall = new Wall(i+1.0f, j+0.5f, 1.1f, 0.1f);
-		if(random.nextBoolean()) eastWall = new Wall(i+0.5f, j+1.0f, 0.1f, 1.1f);
+//		if(random.nextBoolean()) northWall = new Wall(i+1.0f, j+0.5f, 1.1f, 0.1f);
+//		if(random.nextBoolean()) eastWall = new Wall(i+0.5f, j+1.0f, 0.1f, 1.1f);
 		pill = null;
 		deadly = null;
 	}
@@ -36,7 +36,7 @@ public class Cell {
 	public void randomize(){
 		northWall = null;
 		eastWall = null;
-		if(random.nextBoolean()) northWall = new Wall(row+1.0f, col+0.5f, 1.1f, 0.1f);
-		if(random.nextBoolean()) eastWall = new Wall(row+0.5f, col+1.0f, 0.1f, 1.1f);
+//		if(random.nextBoolean()) northWall = new Wall(row+1.0f, col+0.5f, 1.1f, 0.1f);
+//		if(random.nextBoolean()) eastWall = new Wall(row+0.5f, col+1.0f, 0.1f, 1.1f);
 	}
 }

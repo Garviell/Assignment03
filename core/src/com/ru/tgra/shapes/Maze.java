@@ -195,13 +195,13 @@ public class Maze {
         float distanceZ = Math.abs(cam.eye.z - wall.posZ);
         float buffer = 0.01f;
 
-        if (distanceX > (wall.height / 2 + body - buffer) || distanceZ > (wall.width / 2 + body - buffer)) return false;
+        if (distanceX > (wall.widthZ / 2 + body - buffer) || distanceZ > (wall.widthX / 2 + body - buffer)) return false;
         buffer = 0.11f;
 
-        wall.distanceX = (wall.height / 2 + body - buffer) - distanceX;
-        wall.distanceZ = (wall.width / 2 + body - buffer) - distanceZ;
+        wall.distanceX = (wall.widthZ / 2 + body - buffer) - distanceX;
+        wall.distanceZ = (wall.widthX / 2 + body - buffer) - distanceZ;
 
-        return distanceX <= (wall.height / 2 + body) || distanceZ <= (wall.width / 2 + body);
+        return distanceX <= (wall.widthZ / 2 + body) || distanceZ <= (wall.widthX / 2 + body);
     }
 
     //To slide the camera along the wall.
@@ -209,16 +209,16 @@ public class Maze {
     public void moveCamera(Camera cam, Wall minHitWall, String xz) {
         if (xz.equals("X")) {
             if (cam.eye.x < minHitWall.posX) {
-                cam.eye.x = minHitWall.posX - minHitWall.height / 2 - body;
+                cam.eye.x = minHitWall.posX - minHitWall.widthZ / 2 - body;
             } else {
-                cam.eye.x = minHitWall.posX + minHitWall.height / 2 + body;
+                cam.eye.x = minHitWall.posX + minHitWall.widthZ / 2 + body;
             }
         }
         if (xz.equals("Z")) {
             if (cam.eye.z < minHitWall.posZ) {
-                cam.eye.z = minHitWall.posZ - minHitWall.width / 2 - body;
+                cam.eye.z = minHitWall.posZ - minHitWall.widthX / 2 - body;
             } else {
-                cam.eye.z = minHitWall.posZ + minHitWall.width / 2 + body;
+                cam.eye.z = minHitWall.posZ + minHitWall.widthX / 2 + body;
             }
 
         }

@@ -11,7 +11,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private Shader shader;
     private boolean fullScreen;
 
-    private Maze maze;
+//    private Maze maze;
+    private DFSMaze maze;
 
     private float deltaTime;
     private float angle;
@@ -48,7 +49,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         orthoCam = new Camera();
         orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
-        maze = new Maze();
+        maze = new DFSMaze(10, 10);
+
         shader.setGlobalAmbient(0.01f, 0.01f, 0.01f, 1.0f);
         shader.setConstantAtt(0.1f, 0);
         shader.setLinearAtt(0.15f, 0);
@@ -80,10 +82,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 Gdx.graphics.setDisplayMode(width, height, fullScreen);
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            maze.reset();
-            maze.moreDeath();
-        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+//            maze.reset();
+//            maze.moreDeath();
+//        }
 
     }
 
@@ -93,7 +95,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
             angle += 180.0f * deltaTime;
             player.update(deltaTime);
-            maze.checkCollision(player, deltaTime);
+//            maze.checkCollision(player, deltaTime);
 
         } else {
             player.flipAlive();
@@ -155,16 +157,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 shader.setShininess(10);
                 ModelMatrix.main.loadIdentityMatrix();
 
-
-                ModelMatrix.main.pushMatrix();
-
-
-                maze.display(shader, deltaTime);
-                ModelMatrix.main.popMatrix();
-
                 shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
+                maze.display(shader);
 
-                maze.displayDoors(shader, deltaTime);
 
                 player.score.display(shader, deltaTime);
 
