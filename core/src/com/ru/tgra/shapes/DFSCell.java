@@ -75,6 +75,6 @@ public class DFSCell {
 
 
     public String toString(){
-        return "(" + x + " + " + z + ")";
+        return "(" + x + ", " + z + ")";
     }
 }
