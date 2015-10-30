@@ -9,6 +9,7 @@ import java.nio.FloatBuffer;
  * Created by andri on 10/13/15.
  */
 public class Shader {
+    private int lc;
     private int renderingProgramID;
     private int vertexShaderID;
     private int fragmentShaderID;
@@ -41,13 +42,14 @@ public class Shader {
      */
     Shader(){
         //Arrays to have multiple lights without needing to add functions
-        lightPosLoc = new int[2];
-        lightDirLoc = new int[2];
-        lightFocLoc = new int[2];
-        lightDifLoc = new int[2];
-        constantAttLoc = new int[2];
-        linearAttLoc = new int[2];
-        quadraticAttLoc = new int[2];
+        lc = 2;
+        lightPosLoc = new int[lc];
+        lightDirLoc = new int[lc];
+        lightFocLoc = new int[lc];
+        lightDifLoc = new int[lc];
+        constantAttLoc = new int[lc];
+        linearAttLoc = new int[lc];
+        quadraticAttLoc = new int[lc];
         String vertexShaderString;
         String fragmentShaderString;
 
@@ -88,23 +90,16 @@ public class Shader {
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
         materialEmiLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
+        for (int i = 0; i < lc; ++i){
+            lightPosLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition[" + i + "]");
+            lightDifLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse[" + i + "]");
+            lightDirLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection[" + i + "]");
+            lightFocLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus[" + i + "]");
+            constantAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation[" + i + "]");
+            linearAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation[" + i + "]");
+            quadraticAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation[" + i + "]");
 
-        lightPosLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
-        lightDifLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse");
-        lightDirLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection");
-        lightFocLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus");
-        constantAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation");
-        linearAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation");
-        quadraticAttLoc[0] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation");
-
-        lightPosLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition2");
-        lightDifLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse2");
-        lightDirLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDirection2");
-        lightFocLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightFocus2");
-        constantAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation2");
-        linearAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_linearAttenuation2");
-        quadraticAttLoc[1] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_quadraticAttenuation2");
-
+        }
         Gdx.gl.glUseProgram(renderingProgramID);
     }
 
