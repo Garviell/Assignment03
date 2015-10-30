@@ -1,8 +1,19 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner;
 
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.objects.Player;
+import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
+import com.ru.tgra.mazerunner.graphics.shapes.CoordFrameGraphic;
+import com.ru.tgra.mazerunner.graphics.DFSMaze;
+import com.ru.tgra.mazerunner.graphics.shapes.SincGraphic;
+import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
+import com.ru.tgra.mazerunner.logic.Camera;
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.util.Point3D;
+import com.ru.tgra.mazerunner.util.Vector3D;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
@@ -197,7 +208,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
         ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube();
+        BoxGraphic.drawSolidCube(shader);
         ModelMatrix.main.popMatrix();
     }
 
@@ -207,7 +218,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
         ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube();
+        BoxGraphic.drawSolidCube(shader);
         ModelMatrix.main.popMatrix();
     }
 

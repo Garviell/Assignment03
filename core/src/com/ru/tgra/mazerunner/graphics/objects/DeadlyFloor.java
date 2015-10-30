@@ -1,4 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
+
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 
 import java.util.Random;
 
@@ -40,7 +44,7 @@ public class DeadlyFloor {
         ModelMatrix.main.addTranslation(posX, -0.503f, posZ);
         ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube();
+        BoxGraphic.drawSolidCube(shader);
         ModelMatrix.main.popMatrix();
     }
 

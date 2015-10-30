@@ -1,6 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics;
 
-import javafx.util.Pair;
+import com.ru.tgra.mazerunner.graphics.objects.DFSCell;
+import com.ru.tgra.mazerunner.graphics.objects.Player;
+import com.ru.tgra.mazerunner.graphics.objects.Wall;
 
 import java.util.*;
 
@@ -99,7 +101,7 @@ public class DFSMaze {
             for (Wall wall : cell.walls) {
                 if (wall != null) {
                     if(wall.intersects(player)) {
-                        System.out.println("Veggur " + a + " KABÚMMM!!!!");
+                        System.out.println("Veggur " + a + " KABï¿½MMM!!!!");
                     }
                 }
                 a++;

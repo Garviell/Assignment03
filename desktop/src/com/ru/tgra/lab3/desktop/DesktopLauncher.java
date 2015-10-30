@@ -2,7 +2,7 @@ package com.ru.tgra.lab3.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.ru.tgra.shapes.LabFirst3DGame;
+import com.ru.tgra.mazerunner.LabFirst3DGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

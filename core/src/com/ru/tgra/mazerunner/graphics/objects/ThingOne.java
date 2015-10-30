@@ -1,4 +1,10 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
+
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.util.Point3D;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
+import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
 
 public class ThingOne {
 	public ModelMatrix orientation;
@@ -56,7 +62,7 @@ public class ThingOne {
 		ModelMatrix.main.addScale(0.3f, 0.3f, 0.3f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
-		BoxGraphic.drawSolidCube();
+		BoxGraphic.drawSolidCube(shader);
 
 		ModelMatrix.main.popMatrix();
 	}

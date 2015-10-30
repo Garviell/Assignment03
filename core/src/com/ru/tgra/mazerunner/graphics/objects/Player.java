@@ -1,7 +1,14 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
+import com.ru.tgra.mazerunner.logic.Camera;
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.logic.Score;
+import com.ru.tgra.mazerunner.util.Point3D;
+import com.ru.tgra.mazerunner.util.Vector3D;
 
 public class Player {
     public Camera camera;
@@ -12,7 +19,7 @@ public class Player {
     public float body;
     
 
-    Player(float fov){
+    public Player(float fov){
         camera = new Camera();
         camera.look(new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f), new Vector3D(0,0.8f,0));
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);

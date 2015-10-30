@@ -1,4 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
+
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 
 public class Wall {
 	public enum Sides{south,west, north, east}
@@ -51,7 +55,7 @@ public class Wall {
         ModelMatrix.main.addTranslation(posX, 0, posZ);
         ModelMatrix.main.addScale(widthX, 1.0f, widthZ);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube();
+        BoxGraphic.drawSolidCube(shader);
         ModelMatrix.main.popMatrix();
     }
 

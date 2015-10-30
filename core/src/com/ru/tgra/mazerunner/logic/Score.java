@@ -1,12 +1,13 @@
-	package com.ru.tgra.shapes;
+	package com.ru.tgra.mazerunner.logic;
 
-import java.util.ArrayList;
+	import com.ru.tgra.mazerunner.graphics.Shader;
+	import com.ru.tgra.mazerunner.graphics.objects.ThingOne;
 
-public class Score {
+	public class Score {
 	public ThingOne theThing;
 	public int numScore;
 	
-	Score(Camera camera)
+	public Score(Camera camera)
 	{
 		theThing = new ThingOne();
 		numScore = 0;

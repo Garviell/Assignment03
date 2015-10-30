@@ -1,9 +1,10 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.logic;
 
 import java.nio.FloatBuffer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.mazerunner.util.Point3D;
+import com.ru.tgra.mazerunner.util.Vector3D;
 
 public class Camera {
 	public Point3D eye;

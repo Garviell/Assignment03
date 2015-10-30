@@ -1,4 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
+
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.objects.Player;
+import com.ru.tgra.mazerunner.graphics.objects.Wall;
 
 import java.util.Random;
 

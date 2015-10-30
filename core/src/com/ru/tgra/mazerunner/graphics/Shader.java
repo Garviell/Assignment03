@@ -1,7 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.nio.FloatBuffer;
 
@@ -16,8 +17,12 @@ public class Shader {
 
     private int positionLoc;
     private int normalLoc;
+    private int uvLoc;
     private int globalAmbientLoc;
     private int eyePosLoc;
+    private boolean usesDiffuseTexture = false;
+    private int usesDiffuseTexLoc;
+    private int diffuseTextureLoc;
 
     private int lightPosLoc[];
     private int lightDirLoc[];
@@ -40,7 +45,7 @@ public class Shader {
     /*
      * Initializes the vert and fragment shader.  We are mainly using the fragment shader for the light though.
      */
-    Shader(){
+    public Shader(){
         //Arrays to have multiple lights without needing to add functions
         lc = 2;
         lightPosLoc = new int[lc];
@@ -64,7 +69,10 @@ public class Shader {
 
         Gdx.gl.glCompileShader(vertexShaderID);
         Gdx.gl.glCompileShader(fragmentShaderID);
-
+		System.out.println("Vertex shader compile messages:");
+		System.out.println(Gdx.gl.glGetShaderInfoLog(vertexShaderID));
+		System.out.println("Fragment shader compile messages:");
+		System.out.println(Gdx.gl.glGetShaderInfoLog(fragmentShaderID));
         Gdx.gl.glGetError();	// Use glGetShadeGetInfoLoc for more detailed errors.
 
         renderingProgramID = Gdx.gl.glCreateProgram();
@@ -79,6 +87,9 @@ public class Shader {
 
         normalLoc = Gdx.gl.glGetAttribLocation(renderingProgramID, "a_normal");
         Gdx.gl.glEnableVertexAttribArray(normalLoc);
+        uvLoc = Gdx.gl.glGetAttribLocation(renderingProgramID, "a_uv");
+        Gdx.gl.glEnableVertexAttribArray(uvLoc);
+
 
         modelMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
         viewMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
@@ -86,6 +97,8 @@ public class Shader {
 
         eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
         materialDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
+        usesDiffuseTexLoc       = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
+        diffuseTextureLoc       = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
         materialShineLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
@@ -103,6 +116,29 @@ public class Shader {
         Gdx.gl.glUseProgram(renderingProgramID);
     }
 
+        public void setDiffuseTexture(Texture tex)
+    {
+        if(tex == null)
+        {
+            Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
+            usesDiffuseTexture = false;
+        }
+        else
+        {
+            tex.bind(0);
+            Gdx.gl.glUniform1i(diffuseTextureLoc, 0);
+            Gdx.gl.glUniform1f(usesDiffuseTexLoc, 1.0f);
+            usesDiffuseTexture = true;
+
+            Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+            Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+        }
+    }
+
+    public boolean usesTextures()
+    {
+        return (usesDiffuseTexture/* || usesSpecularTexture ... etc.*/);
+    }
     public void setEyePosition(float x, float y, float z, float w){
         Gdx.gl.glUniform4f(eyePosLoc, x, y, z, w);
     }
@@ -161,6 +197,10 @@ public class Shader {
 
     public int getNormalPointer(){
         return normalLoc;
+    }
+
+    public int getUVPointer(){
+        return uvLoc;
     }
 
     public void setModelMatrix(FloatBuffer matrix){

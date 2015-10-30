@@ -1,4 +1,9 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.mazerunner.graphics.objects;
+
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
+import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.logic.Camera;
+import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 
 public class Door {
 	public float posX;
@@ -14,13 +19,13 @@ public class Door {
 	float width;
 	float body = 0.2f;
 	
-	public Door(Cell cell)
-	{
-		posX = cell.row + 1.0f;
-		posZ = cell.col + 0.05f;
-		left = true;
-		add = 0.1f;
-	}
+//	public Door(Cell cell)
+//	{
+//		posX = cell.row + 1.0f;
+//		posZ = cell.col + 0.05f;
+//		left = true;
+//		add = 0.1f;
+//	}
 	
 	public void update(float deltaTime)
 	{
@@ -65,7 +70,7 @@ public class Door {
 		ModelMatrix.main.addTranslation(posX, 0, posZ);
 		ModelMatrix.main.addScale(0.1f, 1.0f, scale);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube();
+		BoxGraphic.drawSolidCube(shader);
 		ModelMatrix.main.popMatrix();
 	}
 	
