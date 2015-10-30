@@ -4,16 +4,14 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-/**
- * Created by andri on 10/27/15.
- */
+
 public class DFSMaze {
     class Pair{
         int x, z;
         Pair(int x, int z){
             this.x = x;
             this.z = z;
-        }
+            }
         public String toString(){
             return "x: " + x + " z: " + z;
         }
@@ -93,17 +91,30 @@ public class DFSMaze {
     }
 
     public void update(Player player, float deltatime){
+        System.out.println();
         for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)){
-            System.out.println(cell);
+            //System.out.print("Update Maze, AdjCell: ");
+            //System.out.println(cell);
+            int a = 0;
+            for (Wall wall : cell.walls) {
+                if (wall != null) {
+                    if(wall.intersects(player)) {
+                        System.out.println("Veggur " + a + " KABÚMMM!!!!");
+                    }
+                }
+                a++;
+            }
         }
+
     }
 
 
     private ArrayList<DFSCell> getAdjCell(float x, float z){
         int tx = (int) Math.floor(x);
         int tz = (int) Math.floor(z);
+        System.out.println("x: " + x + " z: " + z + "  tx: " + tx + " tz: " + tz);
         ArrayList<DFSCell> result = new ArrayList<DFSCell>();
-        if (tx < 0 || tx > xSize || tz < 0 || tz > zSize){
+        if (tx < 0 || tx > xSize || tz < 0 || tz > zSize) {
             return result;
         }
         result.add(cells[tx][tz]);
@@ -117,6 +128,7 @@ public class DFSMaze {
             }
         }
         if (tz < zSize - 1 && tz >= 0){
+            result.add(cells[tx][tz + 1]);
             if (tx > 0){
                 result.add(cells[tx - 1][tz + 1]);
             }

@@ -14,28 +14,28 @@ public class Wall {
 	{
         switch (side){
             case 0: //south
-                this.posX = x - 0.5f;
-                this.posZ = z;
-                this.widthX = 1.1f;
-                this.widthZ = 0.1f;
-                break;
-            case 1: //west
-                this.posX = x;
-                this.posZ = z - 0.5f;
-                this.widthX =0.1f;
-                this.widthZ =1.1f;
-                break;
-            case 2: //north
-                this.posX = x + 0.5f;
-                this.posZ = z;
-                this.widthX = 1.1f;
-                this.widthZ = 0.1f;
-                break;
-            case 3: //east
                 this.posX = x;
                 this.posZ = z + 0.5f;
                 this.widthX = 0.1f;
                 this.widthZ = 1.1f;
+                break;
+            case 1: //west
+                this.posX = x + 0.5f;
+                this.posZ = z;
+                this.widthX =1.1f;
+                this.widthZ =0.1f;
+                break;
+            case 2: //north
+                this.posX = x + 1.0f;
+                this.posZ = z + 0.5f;
+                this.widthX = 0.1f;
+                this.widthZ = 1.1f;
+                break;
+            case 3: //east
+                this.posX = x + 0.5f;
+                this.posZ = z + 1.0f;
+                this.widthX = 1.1f;
+                this.widthZ = 0.1f;
                 break;
         }
 		this.distanceX = Float.MAX_VALUE;
@@ -49,13 +49,28 @@ public class Wall {
         shader.setShininess(2000);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(posX, 0, posZ);
-        ModelMatrix.main.addScale(widthZ, 1.0f, widthX);
+        ModelMatrix.main.addScale(widthX, 1.0f, widthZ);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
     }
 
     public boolean intersects(Player player){
-        return false;
+        distanceX = Math.abs(player.camera.eye.x - posX);
+        distanceZ = Math.abs(player.camera.eye.z - posZ);
+        float buffer = 0.01f;
+
+        if (distanceX > (widthX / 2 + player.body - buffer) ||
+                distanceZ > (widthZ / 2 + player.body - buffer)) return false;
+        buffer = 0.11f;
+
+        distanceX = distanceX - (widthX / 2 + player.body - buffer);
+        distanceZ = distanceZ - (widthZ / 2 + player.body - buffer);
+
+        return distanceX <= 0 || distanceZ <= 0;
+
+        /* Delete later if no trouble
+        return distanceX <= (widthX / 2 + player.body) ||
+                distanceZ <= (widthZ / 2 + player.body);*/
     }
 }

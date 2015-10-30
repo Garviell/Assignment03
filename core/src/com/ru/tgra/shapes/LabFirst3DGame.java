@@ -49,7 +49,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         orthoCam = new Camera();
         orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
-        maze = new DFSMaze(10, 10);
+        maze = new DFSMaze(15, 15);
 
         shader.setGlobalAmbient(0.01f, 0.01f, 0.01f, 1.0f);
         shader.setConstantAtt(0.1f, 0);

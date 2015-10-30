@@ -9,15 +9,17 @@ public class Player {
     private boolean flashlight;
     private float fov;
     public Score score;
+    public float body;
     
 
     Player(float fov){
         camera = new Camera();
-        camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0,0.0f,0), new Vector3D(0,0.8f,0));
+        camera.look(new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f), new Vector3D(0,0.8f,0));
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         this.fov = fov;
         flashlight = false;
         alive = true;
+        body = 0.2f;
         score = new Score(camera);
     }
 

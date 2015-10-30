@@ -6,15 +6,15 @@ import java.util.Random;
  * Created by andri on 10/27/15.
  */
 public class DFSCell {
-    private Wall[] walls;
+    public Wall[] walls;
     private int x, z;
 
     public DFSCell(int x, int z) {
         walls = new Wall[4];
         if (x == 0) walls[0] = new Wall(x, z, 0); //south
         if (z == 0) walls[1] = new Wall(x, z, 1); //west
-        walls[2] = new Wall(x, z, 2); //east (Don't question it)
-        walls[3] = new Wall(x, z, 3); //north
+        walls[2] = new Wall(x, z, 2); //north (Don't question it)
+        walls[3] = new Wall(x, z, 3); //east
         this.x = x;
         this.z = z;
     }
@@ -63,6 +63,7 @@ public class DFSCell {
         for (Wall wall : walls){
             if (wall != null){
                if(wall.intersects(player)){
+                   System.out.println("Fór inn");
                    return wall;
                }
             }
