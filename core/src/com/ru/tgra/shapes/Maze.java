@@ -139,14 +139,12 @@ public class Maze {
                 }
             }
         }
-
     }
 
     public void findClosestWalls(Player player, ArrayList<Wall> check) {
         Camera cam = player.camera;
         int eyex = (int) Math.floor(cam.eye.x);
         int eyez = (int) Math.floor(cam.eye.z);
-
 
         if (cam.eye.x >= 0 && cam.eye.x < 20 && cam.eye.z >= 0 && cam.eye.z < 20) {
             Cell currentCell = cell[eyex][eyez];

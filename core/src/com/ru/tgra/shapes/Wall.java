@@ -1,7 +1,5 @@
 package com.ru.tgra.shapes;
 
-import java.awt.geom.Point2D;
-
 public class Wall {
 	public enum Sides{south,west, north, east}
     public Sides side;
@@ -18,31 +16,32 @@ public class Wall {
             case 0: //south
                 this.posX = x - 0.5f;
                 this.posZ = z;
-                this.widthX = 1;
+                this.widthX = 1.1f;
                 this.widthZ = 0.1f;
                 break;
             case 1: //west
                 this.posX = x;
                 this.posZ = z - 0.5f;
                 this.widthX =0.1f;
-                this.widthZ =1;
+                this.widthZ =1.1f;
                 break;
             case 2: //north
                 this.posX = x + 0.5f;
                 this.posZ = z;
-                this.widthX = 1;
+                this.widthX = 1.1f;
                 this.widthZ = 0.1f;
                 break;
             case 3: //east
                 this.posX = x;
                 this.posZ = z + 0.5f;
                 this.widthX = 0.1f;
-                this.widthZ = 1;
+                this.widthZ = 1.1f;
                 break;
         }
 		this.distanceX = Float.MAX_VALUE;
 		this.distanceZ = Float.MAX_VALUE;
 	}
+
 
 	public void draw(Shader shader){
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
@@ -54,5 +53,9 @@ public class Wall {
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         BoxGraphic.drawSolidCube();
         ModelMatrix.main.popMatrix();
+    }
+
+    public boolean intersects(Player player){
+        return false;
     }
 }

@@ -31,67 +31,42 @@ public class DFSMaze {
                 cells[x][z] = new DFSCell(x, z);
             }
         }
-        boolean[][] visited = new boolean[xSize][zSize];
-        boolean next = false;
-//        for (DFSCell cell : cells[1]){
-//            cell.destroyWall(Wall.Sides.east);
-//        }
-//        cells[0][0].destroyWall(Wall.Sides.east);
-//        cells[1][0].destroyWall(Wall.Sides.east);
-//        cells[2][0].destroyWall(Wall.Sides.east);
-       // cells[0][2].destroyWall(Wall.Sides.east);
 
-        for (DFSCell[] cell : cells){
-            for (DFSCell c : cell){
-                c.printWalls();
-            }
-            System.out.println();
-            System.out.println();
-            System.out.println();
-        }
-        dfs(visited, new Pair(0, 0), 0);
-//        for (int i = 0;  i < (xSize * zSize)/10; i++){
-//            cells[rand.nextInt(xSize)][rand.nextInt(zSize)].destroyRandomWall();
+        boolean[][] visited = new boolean[xSize][zSize];
+        dfs(visited, new Pair(xSize/2, zSize/2));
+//        for (int i = 0;  i < (xSize * zSize)/5; i++){
+//            cells[rand.nextInt(xSize - 2) + 1][rand.nextInt(zSize - 2) + 1].destroyRandomWall();
 //        }
     }
 
 
-    private void dfs(boolean[][] visited, Pair curr, int count){
+    private void dfs(boolean[][] visited, Pair curr){
         visited[curr.x][curr.z] = true;
-        count++;
         ArrayList<Pair> adj = getAdj(curr);
         for (Pair p : adj){
             if (!visited[p.x][p.z]){
                 if (p.x == curr.x){
                     if (p.z < curr.z){
-                        System.out.printf("%s destroying west to get to %s\n", curr, p);
                         if (!cells[curr.x][curr.z].destroyWall(1)) { //west
-                            System.out.printf("%s destroying east of %s instead\n", curr, p);
                             cells[p.x][p.z].destroyWall(3); //east
                         }
                     } else {
-                        System.out.printf("%s destroying east to get to %s\n", curr, p);
                         if (!cells[curr.x][curr.z].destroyWall(3)){ //east
-                            System.out.printf("%s destroying west of %s instead\n", curr, p);
                             cells[p.x][p.z].destroyWall(1); //west
                         }
                     }
                 } else {
                     if (p.x < curr.x){
-                        System.out.printf("%s destroying south to get to %s\n", curr, p);
                         if (!cells[curr.x][curr.z].destroyWall(0)){ //south
-                            System.out.printf("%s destroying north of %s instead\n", curr, p);
                             cells[p.x][p.z].destroyWall(2); //north
                         }
                     } else {
-                        System.out.printf("%s destroying north to get to %s\n", curr, p);
                         if (!cells[curr.x][curr.z].destroyWall(2)) { //north
-                            System.out.printf("%s destroying south of %s instead\n", curr, p);
                             cells[p.x][p.z].destroyWall(0); //south
                         }
                     }
                 }
-                dfs(visited, p, count);
+                dfs(visited, p);
             }
         }
     }
@@ -114,6 +89,47 @@ public class DFSMaze {
             result.add(new Pair(x + 1, z));
         }
         Collections.shuffle(result);
+        return result;
+    }
+
+    public void update(Player player, float deltatime){
+        for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)){
+            System.out.println(cell);
+        }
+    }
+
+
+    private ArrayList<DFSCell> getAdjCell(float x, float z){
+        int tx = (int) Math.floor(x);
+        int tz = (int) Math.floor(z);
+        ArrayList<DFSCell> result = new ArrayList<DFSCell>();
+        if (tx < 0 || tx > xSize || tz < 0 || tz > zSize){
+            return result;
+        }
+        result.add(cells[tx][tz]);
+        if (tz > 0 && tz < zSize){
+            result.add(cells[tx][tz - 1]);
+            if (tx > 0){
+                result.add(cells[tx - 1][tz - 1]);
+            }
+            if (tx < zSize - 1){
+                result.add(cells[tx + 1][tz - 1]);
+            }
+        }
+        if (tz < zSize - 1 && tz >= 0){
+            if (tx > 0){
+                result.add(cells[tx - 1][tz + 1]);
+            }
+            if (tx < zSize - 1){
+                result.add(cells[tx + 1][tz + 1]);
+            }
+        }
+        if (tx > 0 && tx < xSize){
+            result.add(cells[tx - 1][tz]);
+        }
+        if (tx < xSize - 1 && tx >= 0){
+            result.add(cells[tx + 1][tz]);
+        }
         return result;
     }
 

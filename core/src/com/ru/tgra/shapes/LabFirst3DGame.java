@@ -95,6 +95,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
             angle += 180.0f * deltaTime;
             player.update(deltaTime);
+            maze.update(player, deltaTime);
 //            maze.checkCollision(player, deltaTime);
 
         } else {

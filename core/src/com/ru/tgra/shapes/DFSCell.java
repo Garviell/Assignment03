@@ -7,40 +7,42 @@ import java.util.Random;
  */
 public class DFSCell {
     private Wall[] walls;
-    public DFSCell(int x, int z){
+    private int x, z;
+
+    public DFSCell(int x, int z) {
         walls = new Wall[4];
-        System.out.printf("Z = %d, Y = %d\n", x, z);
         if (x == 0) walls[0] = new Wall(x, z, 0); //south
-        if (z == 0)walls[1] = new Wall(x, z, 1); //west
+        if (z == 0) walls[1] = new Wall(x, z, 1); //west
         walls[2] = new Wall(x, z, 2); //east (Don't question it)
         walls[3] = new Wall(x, z, 3); //north
+        this.x = x;
+        this.z = z;
     }
 
-    public void display(Shader shader){
-        for (Wall wall : walls){
-            if (wall != null){
+    public void display(Shader shader) {
+        for (Wall wall : walls) {
+            if (wall != null) {
                 wall.draw(shader);
             }
         }
     }
 
-    public boolean destroyWall(int side){
+    public boolean destroyWall(int side) {
         if (walls[side] == null) return false;
-        System.out.printf("SIDE BEING DESTROYED: %s\n", Wall.Sides.values()[side]);
         walls[side] = null;
         return true;
     }
 
-    public void destroyRandomWall(){
+    public void destroyRandomWall() {
         Random rand = new Random();
         boolean check = false;
-        for (Wall wall : walls){
+        for (Wall wall : walls) {
             if (wall != null) check = true;
         }
 
-        while(check){
+        while (check) {
             int tmp = rand.nextInt(4);
-            if (walls[tmp] != null){
+            if (walls[tmp] != null) {
                 walls[tmp] = null;
                 check = false;
             }
@@ -49,21 +51,31 @@ public class DFSCell {
     }
 
 
-
-    public void DESTROY(){
-        for (int i = 0; i < 4; i++){
+    public void DESTROY() {
+        for (int i = 0; i < 4; i++) {
             walls[i] = null;
         }
         System.out.println();
     }
 
 
-    public void printWalls(){
-        for (int i = 0; i < 4; i++){
-            if(walls[i] != null){
-                System.out.println(walls[i].side);
+    public boolean intersects(Player player) {
+        for (Wall wall : walls){
+            if (wall != null){
+                wall.intersects(player);
             }
         }
-        System.out.println();
+
+        //Intersects DEATHCRUSHWALLS
+        //Intersects DEATHFALLFLOORS
+        return false;
+    }
+
+    private void moveCamera(Player player){
+        return;
+    }
+
+    public String toString(){
+        return "(" + x + " + " + z + ")";
     }
 }
