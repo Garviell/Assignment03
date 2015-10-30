@@ -91,28 +91,15 @@ public class DFSMaze {
     }
 
     public void update(Player player, float deltatime){
-        System.out.println();
-        for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)){
-            //System.out.print("Update Maze, AdjCell: ");
-            //System.out.println(cell);
-            int a = 0;
-            for (Wall wall : cell.walls) {
-                if (wall != null) {
-                    if(wall.intersects(player)) {
-                        System.out.println("Veggur " + a + " KABÚMMM!!!!");
-                    }
-                }
-                a++;
-            }
-        }
-
+        checkCollision(player, deltatime);
     }
 
 
     private ArrayList<DFSCell> getAdjCell(float x, float z){
         int tx = (int) Math.floor(x);
         int tz = (int) Math.floor(z);
-        System.out.println("x: " + x + " z: " + z + "  tx: " + tx + " tz: " + tz);
+
+        //System.out.println("x: " + x + " z: " + z + "  tx: " + tx + " tz: " + tz);
         ArrayList<DFSCell> result = new ArrayList<DFSCell>();
         if (tx < 0 || tx > xSize || tz < 0 || tz > zSize) {
             return result;
@@ -143,6 +130,69 @@ public class DFSMaze {
             result.add(cells[tx + 1][tz]);
         }
         return result;
+    }
+
+    private void checkCollision(Player player, float deltaTime) {
+        ArrayList<Wall> hit = new ArrayList<Wall>();
+
+        boolean goOn = true;
+        while (goOn) {
+
+            for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)) {
+                for (Wall wall : cell.walls) {
+                    if (wall != null) {
+                        if (wall.intersects(player)) {
+                            hit.add(wall);
+                        }
+                    }
+                }
+            }
+
+            if (!hit.isEmpty()) {
+                System.out.println("Trouble");
+                float minHit = Float.MAX_VALUE;
+                Wall minHitWall = null;
+                String xz = "";
+
+                // Find who is nearest
+                for (Wall wall : hit) {
+                    if (wall.distanceX < minHit) {
+                        minHit = wall.distanceX;
+                        minHitWall = wall;
+                        xz = "X";
+                    }
+                    if (wall.distanceZ < minHit) {
+                        minHit = wall.distanceZ;
+                        minHitWall = wall;
+                        xz = "Z";
+                    }
+                }
+
+                moveCamera(player, minHitWall, xz);
+                hit.clear();
+            } else {
+                goOn = false;
+            }
+        }
+
+    }
+
+    private void moveCamera(Player player, Wall minHitWall, String xz) {
+        if (xz.equals("Z")) {
+            if (player.camera.eye.x < minHitWall.posX) {
+                player.camera.eye.x = minHitWall.posX - (minHitWall.widthX / 2) - player.body;
+            } else {
+                player.camera.eye.x = minHitWall.posX + (minHitWall.widthX / 2) + player.body;
+            }
+        }
+        if (xz.equals("X")) {
+            if (player.camera.eye.z < minHitWall.posZ) {
+                player.camera.eye.z = minHitWall.posZ - (minHitWall.widthZ / 2) - player.body;
+            } else {
+                player.camera.eye.z = minHitWall.posZ + (minHitWall.widthZ / 2) + player.body;
+            }
+
+        }
     }
 
     public void display(Shader shader){

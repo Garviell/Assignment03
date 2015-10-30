@@ -69,8 +69,8 @@ public class Wall {
 
         return distanceX <= 0 || distanceZ <= 0;
 
-        /* Delete later if no trouble
-        return distanceX <= (widthX / 2 + player.body) ||
+        // Delete later if no trouble
+        /*return distanceX <= (widthX / 2 + player.body) ||
                 distanceZ <= (widthZ / 2 + player.body);*/
     }
 }
