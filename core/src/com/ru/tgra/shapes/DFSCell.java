@@ -59,21 +59,20 @@ public class DFSCell {
     }
 
 
-    public boolean intersects(Player player) {
+    public Wall intersects(Player player) {
         for (Wall wall : walls){
             if (wall != null){
-                wall.intersects(player);
+               if(wall.intersects(player)){
+                   return wall;
+               }
             }
         }
 
         //Intersects DEATHCRUSHWALLS
         //Intersects DEATHFALLFLOORS
-        return false;
+        return null;
     }
 
-    private void moveCamera(Player player){
-        return;
-    }
 
     public String toString(){
         return "(" + x + " + " + z + ")";
