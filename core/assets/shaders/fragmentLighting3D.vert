@@ -4,6 +4,7 @@ precision mediump float;
 
 attribute vec3 a_position;
 attribute vec3 a_normal;
+attribute vec2 a_uv;
 
 uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
@@ -15,6 +16,7 @@ uniform vec4 u_lightPosition[2];
 varying vec4 v_normal;
 varying vec4 v_s[2];
 varying vec4 v_h[2];
+varying vec2 v_uv;
 
 void main()
 {
@@ -34,6 +36,6 @@ void main()
 	}
 	position = u_viewMatrix * position;
 
-
+    v_uv = a_uv;
 	gl_Position = u_projectionMatrix * position;
 }

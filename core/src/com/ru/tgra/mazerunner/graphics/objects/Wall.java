@@ -1,5 +1,7 @@
 package com.ru.tgra.mazerunner.graphics.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.graphics.Shader;
 import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
@@ -7,6 +9,8 @@ import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 public class Wall {
 	public enum Sides{south,west, north, east}
     public Sides side;
+    private Texture tex;
+    private Texture spectex;
 	float posX;
 	float posZ;
 	float widthX;
@@ -16,6 +20,9 @@ public class Wall {
 	
 	public Wall(float x, float z, int side)
 	{
+        tex = new Texture(Gdx.files.internal("textures/redbrick.jpg"));
+        spectex = new Texture(Gdx.files.internal("textures/spectex01.png"));
+
         switch (side){
             case 0: //south
                 this.posX = x;
@@ -55,7 +62,7 @@ public class Wall {
         ModelMatrix.main.addTranslation(posX, 0, posZ);
         ModelMatrix.main.addScale(widthX, 1.0f, widthZ);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader);
+        BoxGraphic.drawSolidCube(shader, tex, spectex);
         ModelMatrix.main.popMatrix();
     }
 

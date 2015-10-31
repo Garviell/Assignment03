@@ -70,7 +70,7 @@ public class Door {
 		ModelMatrix.main.addTranslation(posX, 0, posZ);
 		ModelMatrix.main.addScale(0.1f, 1.0f, scale);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader);
+		BoxGraphic.drawSolidCube(shader, null, null);
 		ModelMatrix.main.popMatrix();
 	}
 	

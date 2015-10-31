@@ -112,17 +112,17 @@ public class Player {
         ModelMatrix.main.addTranslation(camera.eye.x, camera.eye.y, camera.eye.z);
         ModelMatrix.main.addScale(0.25f, 0.25f, 0.25f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere();
+        SphereGraphic.drawSolidSphere(shader, null);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(-camera.u.x, 0, -camera.u.z);
         ModelMatrix.main.addScale(0.55f, 0.55f, 0.55f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere();
+        SphereGraphic.drawSolidSphere(shader, null);
         ModelMatrix.main.popMatrix();
         ModelMatrix.main.addTranslation(camera.u.x, 0, camera.u.z);
         ModelMatrix.main.addScale(0.55f, 0.55f, 0.55f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere();
+        SphereGraphic.drawSolidSphere(shader, null);
         ModelMatrix.main.popMatrix();
 
     }

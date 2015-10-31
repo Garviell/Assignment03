@@ -32,9 +32,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     @Override
     public void create() {
-        fullScreen = true;
+        fullScreen = false;
         Graphics.DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
-        Gdx.graphics.setDisplayMode(disp.width, disp.height, fullScreen);
+//        Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
+        Gdx.graphics.setDisplayMode(1280, 1024, true);
         shader = new Shader();
 
         Gdx.input.setInputProcessor(this);
@@ -43,7 +44,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         shader.setMaterialDiffuse(0.7f, 0.2f, 0, 1);
 
         BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
-        SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
+        SphereGraphic.create();
         SincGraphic.create(shader.getVertexPointer());
         CoordFrameGraphic.create(shader.getVertexPointer());
 
@@ -60,7 +61,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         orthoCam = new Camera();
         orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
 
-        maze = new DFSMaze(15, 15);
+        maze = new DFSMaze(3, 3);
 
         shader.setGlobalAmbient(0.01f, 0.01f, 0.01f, 1.0f);
         shader.setConstantAtt(0.1f, 0);
@@ -134,7 +135,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(-15, 20, 1);
         ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere();
+        SphereGraphic.drawSolidSphere(shader, null);
         shader.setMaterialEmission(0, 0, 0, 1);
         ModelMatrix.main.popMatrix();
     }
@@ -208,7 +209,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
         ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader);
+        BoxGraphic.drawSolidCube(shader, null, null);
         ModelMatrix.main.popMatrix();
     }
 
@@ -218,7 +219,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(10.0f, 0.5f, 10.0f);
         ModelMatrix.main.addScale(20.2f, 0.1f, 20.2f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader);
+        BoxGraphic.drawSolidCube(shader, null, null);
         ModelMatrix.main.popMatrix();
     }
 

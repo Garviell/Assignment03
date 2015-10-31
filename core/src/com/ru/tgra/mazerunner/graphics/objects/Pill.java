@@ -31,13 +31,13 @@ public class Pill {
 		orientation.addRotationY(0.3f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawSolidSphere();
+		SphereGraphic.drawSolidSphere(shader, null);
         shader.setMaterialDiffuse(0, 0.6f, 0.8f, 1.0f);
 		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setShininess(30);
 		ModelMatrix.main.addScale(1.01f, 1.01f, 1.01f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawOutlineSphere();
+		SphereGraphic.drawOutlineSphere(shader);
 		shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
 		ModelMatrix.main.popMatrix();
 	}
