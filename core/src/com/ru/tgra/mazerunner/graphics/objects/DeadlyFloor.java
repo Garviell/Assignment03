@@ -48,8 +48,10 @@ public class DeadlyFloor {
         ModelMatrix.main.popMatrix();
     }
 
-    public boolean isDeadly(){
-        return color >= deathAt;
+    public void onFloor(Player player) {
+        if (color >= deathAt) {
+            player.flipAlive();
+        }
     }
 
 }

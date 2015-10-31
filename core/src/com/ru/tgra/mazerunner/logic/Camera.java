@@ -69,6 +69,11 @@ public class Camera {
 		eye.z -= del*n.z;
 	}
 
+	public void jump(float delU, float delV, float delN)
+	{
+		eye.y += delU*u.y + delV*v.y + delN*n.y;
+	}
+
 	public void roll(float angle)
 	{
 		float radians = angle * (float)Math.PI / 180.0f;

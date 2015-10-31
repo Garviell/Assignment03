@@ -1,8 +1,6 @@
 package com.ru.tgra.mazerunner.graphics;
 
-import com.ru.tgra.mazerunner.graphics.objects.DFSCell;
-import com.ru.tgra.mazerunner.graphics.objects.Player;
-import com.ru.tgra.mazerunner.graphics.objects.Wall;
+import com.ru.tgra.mazerunner.graphics.objects.*;
 
 import java.util.*;
 
@@ -20,11 +18,12 @@ public class DFSMaze {
     }
     private int xSize, zSize;
     private DFSCell[][] cells;
+    private int numDoors = 8;
+    private int numFloors = 8;
 
     public DFSMaze(int xSize, int zSize){
         this.xSize = xSize;
         this.zSize = zSize;
-        Random rand = new Random();
         cells = new DFSCell[xSize][zSize];
         for (int x = 0; x < xSize; x++){
             for (int z = 0; z < zSize; z++){
@@ -37,6 +36,31 @@ public class DFSMaze {
 //        for (int i = 0;  i < (xSize * zSize)/5; i++){
 //            cells[rand.nextInt(xSize - 2) + 1][rand.nextInt(zSize - 2) + 1].destroyRandomWall();
 //        }
+
+        int a = 0;
+        while (a < numDoors) {
+            Random r = new Random();
+            int x = r.nextInt(xSize-1) + 1;
+            int z = r.nextInt(xSize-1) + 1;
+            if (cells[x][z].walls[3] != null && cells[x][z-1].walls[3] != null) {
+                if (cells[x][z].door == null) {
+                    cells[x][z].door = new Door(x, z);
+                    a++;
+                }
+            }
+        }
+
+        a = 0;
+        while (a < numFloors) {
+            Random r = new Random();
+            int x = r.nextInt(xSize);
+            int z = r.nextInt(xSize);
+            if (cells[x][z].floor == null) {
+                cells[x][z].floor = new DeadlyFloor(x, z, 0.9f, 0.3f);
+                a++;
+            }
+        }
+
     }
 
 
@@ -92,29 +116,16 @@ public class DFSMaze {
         return result;
     }
 
-    public void update(Player player, float deltatime){
-        System.out.println();
-        for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)){
-            //System.out.print("Update Maze, AdjCell: ");
-            //System.out.println(cell);
-            int a = 0;
-            for (Wall wall : cell.walls) {
-                if (wall != null) {
-                    if(wall.intersects(player)) {
-                        System.out.println("Veggur " + a + " KAB�MMM!!!!");
-                    }
-                }
-                a++;
-            }
-        }
-
+    public void update(Player player){
+        checkCollision(player);
     }
 
 
     private ArrayList<DFSCell> getAdjCell(float x, float z){
         int tx = (int) Math.floor(x);
         int tz = (int) Math.floor(z);
-        System.out.println("x: " + x + " z: " + z + "  tx: " + tx + " tz: " + tz);
+
+        //System.out.println("x: " + x + " z: " + z + "  tx: " + tx + " tz: " + tz);
         ArrayList<DFSCell> result = new ArrayList<DFSCell>();
         if (tx < 0 || tx > xSize || tz < 0 || tz > zSize) {
             return result;
@@ -147,10 +158,82 @@ public class DFSMaze {
         return result;
     }
 
-    public void display(Shader shader){
+    private void checkCollision(Player player) {
+        ArrayList<Wall> hit = new ArrayList<Wall>();
+
+        boolean goOn = true;
+        while (goOn) {
+
+            for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)) {
+                for (Wall wall : cell.walls) {
+                    if (wall != null) {
+                        if (wall.intersects(player)) {
+                            hit.add(wall);
+                        }
+                    }
+                }
+            }
+
+            if (!hit.isEmpty()) {
+                float minHit = Float.MAX_VALUE;
+                Wall minHitWall = null;
+                String xz = "";
+
+                // Find who is nearest
+                for (Wall wall : hit) {
+                    float distX = wall.getDistX();
+                    if (distX < minHit) {
+                        minHit = distX;
+                        minHitWall = wall;
+                        xz = "X";
+                    }
+
+                    float distZ = wall.getDistZ();
+                    if (distZ < minHit) {
+                        minHit = distZ;
+                        minHitWall = wall;
+                        xz = "Z";
+                    }
+                }
+
+                moveCamera(player, minHitWall, xz);
+                hit.clear();
+            } else {
+                goOn = false;
+            }
+        }
+
+        for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)) {
+            if (cell.door != null) { cell.doorFloorCollision(player); }
+        }
+    }
+
+    private void moveCamera(Player player, Wall minHitWall, String xz) {
+        if (xz.equals("Z")) {
+            float posX = minHitWall.getPosX();
+            float widthX = minHitWall.getWidX();
+            if (player.camera.eye.x < posX) {
+                player.camera.eye.x = posX - (widthX / 2) - player.body;
+            } else {
+                player.camera.eye.x = posX + (widthX / 2) + player.body;
+            }
+        }
+        if (xz.equals("X")) {
+            float posZ = minHitWall.getPosZ();
+            float widthZ = minHitWall.getWidZ();
+            if (player.camera.eye.z < posZ) {
+                player.camera.eye.z = posZ - (widthZ / 2) - player.body;
+            } else {
+                player.camera.eye.z = posZ + (widthZ / 2) + player.body;
+            }
+
+        }
+    }
+
+    public void display(Shader shader, float deltaTime){
         for (int x = 0; x < xSize; ++x){
             for (int z = 0; z < zSize; ++z){
-                cells[x][z].display(shader);
+                cells[x][z].display(shader, deltaTime);
             }
         }
     }

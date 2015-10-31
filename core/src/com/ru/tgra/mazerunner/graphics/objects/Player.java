@@ -17,6 +17,9 @@ public class Player {
     private float fov;
     public Score score;
     public float body;
+    private boolean jump;
+    private boolean up;
+    private int jumpCount;
     
 
     public Player(float fov){
@@ -28,6 +31,9 @@ public class Player {
         alive = true;
         body = 0.2f;
         score = new Score(camera);
+        jump = false;
+        up = true;
+        jumpCount = 0;
     }
 
 
@@ -75,6 +81,12 @@ public class Player {
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
             camera.walk(-2.0f * deltaTime);
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            System.out.println(camera.eye.y);
+            if (camera.eye.y == 0.08f) {
+                jump = true;
+            }
+        }
         if(Gdx.input.isKeyPressed(Input.Keys.T)) {
             changeFov(-20.0f, deltaTime);
         }
@@ -83,6 +95,25 @@ public class Player {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             flashlight = !flashlight;
+        }
+
+        if (jump) {
+            if (up) {
+                camera.jump(0, 2.0f * deltaTime, 0);
+                jumpCount++;
+                if (jumpCount == 15) {
+                    up = false;
+                }
+            }
+            else {
+                camera.jump(0, -2.0f * deltaTime, 0);
+                jumpCount--;
+                if (jumpCount == 0) {
+                    camera.eye.y = 0.08f;
+                    jump = false;
+                    up = true;
+                }
+            }
         }
 
     }

@@ -12,32 +12,35 @@ public class Door {
 	public float add;
 	public float endX;
 	public float endZ;
+    private float c;
 	float distanceX = Float.MAX_VALUE;
 	float distanceZ = Float.MAX_VALUE;
 	boolean left;
-	float height = 0.1f;
-	float width;
+	float widthX = 1.0f;
+	float widthZ;
 	float body = 0.2f;
 	
-//	public Door(Cell cell)
-//	{
-//		posX = cell.row + 1.0f;
-//		posZ = cell.col + 0.05f;
-//		left = true;
-//		add = 0.1f;
-//	}
+	public Door(int x, int z)
+	{
+		posX = x + 0.5f;
+		posZ = z + 0.05f;
+		left = true;
+		add = 0.1f;
+
+	}
 	
 	public void update(float deltaTime)
 	{
+        c = 0.15f * deltaTime;
 		if(add < 0.89f && left)
 		{
-			add += 0.005f;
-			posZ += 0.0025f;
+			add += c;
+			posZ += c / 2;
 		}
 		else if(add > 0.15f && !left)
 		{
-			add -= 0.005f;
-			posZ -= 0.0025f;
+			add -= c;
+			posZ -= c / 2;
 		}
 		else if(add >= 0.89f && left)
 		{
@@ -50,25 +53,27 @@ public class Door {
 
 		if(left)
 		{
-			scale += 0.005f;
+			scale += c;
 		}
 		else 
 		{
-			scale -= 0.005f;
+			scale -= c;
 		}
 		
-		endZ = posZ - 0.05f + (add/2);
-		width = 2 * (endZ - posZ);
+		endZ = posZ - c + (add/2);
+		widthZ = 2 * (endZ - posZ);
 		
 	}
 	
 	public void display(Shader shader)
 	{
-        shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
+        shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
+        shader.setMaterialDiffuse(0.5f, 0.5f, 0.7f, 1.0f);
+        shader.setShininess(2000);
 
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(posX, 0, posZ);
-		ModelMatrix.main.addScale(0.1f, 1.0f, scale);
+		ModelMatrix.main.addScale(widthX, 1.0f, scale);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube(shader, null, null);
 		ModelMatrix.main.popMatrix();
@@ -79,21 +84,48 @@ public class Door {
 		distanceX = Math.abs(cam.eye.x - posX);
 		distanceZ = Math.abs(cam.eye.z - posZ);
 
-	    if (distanceX > (height/2 + body)) return false;
-	    if (distanceZ > (width/2 + body)) return false;
+	    if (distanceX > (widthX /2 + body)) return false;
+	    if (distanceZ > (widthZ /2 + body)) return false;
 	    float checkX = distanceX;
 	    float checkZ = distanceZ;
 
-    	distanceX = (height/2 + body) - distanceX;
-    	distanceZ = (width/2 + body) - distanceZ;
+    	distanceX = (widthX /2 + body) - distanceX;
+    	distanceZ = (widthZ /2 + body) - distanceZ;
 
-	    if (checkX <= (height/2 + body)) 
+        return checkZ <= (widthZ / 2 + body) || checkX <= (widthX /2 + body);
+		/*
+	    if (checkX <= (widthX/2 + body))
 	    {
 	    	return true;
 	    }
-		return checkZ <= (width / 2 + body);
+		return checkZ <= (widthZ / 2 + body);*/
 
 	}
+
+    //Door that kills you,  pretty basic
+    public void collision(Player player) {
+        float distanceZ = Math.abs(player.camera.eye.z - endZ);
+
+        if (distanceZ < distanceX) {
+            if (widthZ > 0.4f && distanceZ <= 0.21f) {
+                player.score.numScore = 0;
+                player.flipAlive();
+            } else {
+                if (player.camera.eye.z < posZ) {
+                    player.camera.eye.z = posZ - widthZ / 2 - body;
+                } else {
+                    player.camera.eye.z = posZ + widthZ / 2 + body;
+                }
+            }
+        } else {
+            if (player.camera.eye.x < posX) {
+                player.camera.eye.x = posX - widthX / 2 - body;
+            } else {
+                player.camera.eye.x = posX + widthX / 2 + body;
+            }
+        }
+
+    }
 	
 	
 }

@@ -63,7 +63,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
         maze = new DFSMaze(3, 3);
 
-        shader.setGlobalAmbient(0.01f, 0.01f, 0.01f, 1.0f);
+        shader.setGlobalAmbient(0.2f, 0.2f, 0.2f, 1.0f);
         shader.setConstantAtt(0.1f, 0);
         shader.setLinearAtt(0.15f, 0);
         shader.setQuadraticAtt(0.0000f, 0);
@@ -107,7 +107,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
             angle += 180.0f * deltaTime;
             player.update(deltaTime);
-            maze.update(player, deltaTime);
+            maze.update(player);
 //            maze.checkCollision(player, deltaTime);
 
         } else {
@@ -171,7 +171,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 ModelMatrix.main.loadIdentityMatrix();
 
                 shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
-                maze.display(shader);
+                maze.display(shader, deltaTime);
 
 
                 player.score.display(shader, deltaTime);

@@ -17,6 +17,8 @@ public class Wall {
 	float widthZ;
 	float distanceX;
 	float distanceZ;
+
+
 	
 	public Wall(float x, float z, int side)
 	{
@@ -33,8 +35,8 @@ public class Wall {
             case 1: //west
                 this.posX = x + 0.5f;
                 this.posZ = z;
-                this.widthX =1.1f;
-                this.widthZ =0.1f;
+                this.widthX = 1.1f;
+                this.widthZ = 0.1f;
                 break;
             case 2: //north
                 this.posX = x + 1.0f;
@@ -52,7 +54,6 @@ public class Wall {
 		this.distanceX = Float.MAX_VALUE;
 		this.distanceZ = Float.MAX_VALUE;
 	}
-
 
 	public void draw(Shader shader){
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
@@ -80,8 +81,32 @@ public class Wall {
 
         return distanceX <= 0 || distanceZ <= 0;
 
-        /* Delete later if no trouble
-        return distanceX <= (widthX / 2 + player.body) ||
+        // Delete later if no trouble
+        /*return distanceX <= (widthX / 2 + player.body) ||
                 distanceZ <= (widthZ / 2 + player.body);*/
+    }
+
+    public float getDistX(){
+        return distanceX;
+    }
+
+    public float getDistZ(){
+        return distanceZ;
+    }
+
+    public float getPosX(){
+        return posX;
+    }
+
+    public float getPosZ(){
+        return posZ;
+    }
+
+    public float getWidX(){
+        return widthX;
+    }
+
+    public float getWidZ(){
+        return widthZ;
     }
 }
