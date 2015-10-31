@@ -22,7 +22,7 @@ public class Wall {
 	
 	public Wall(float x, float z, int side)
 	{
-        tex = new Texture(Gdx.files.internal("textures/redbrick.jpg"));
+        tex = new Texture(Gdx.files.internal("textures/redbricksmall.jpg"));
         spectex = new Texture(Gdx.files.internal("textures/spectex01.png"));
 
         switch (side){
