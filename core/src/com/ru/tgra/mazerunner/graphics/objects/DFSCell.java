@@ -4,13 +4,13 @@ import com.ru.tgra.mazerunner.graphics.Shader;
 import com.ru.tgra.mazerunner.graphics.objects.Player;
 import com.ru.tgra.mazerunner.graphics.objects.Wall;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created by andri on 10/27/15.
- */
 public class DFSCell {
     public Wall[] walls;
+    public Door door;
+    public DeadlyFloor floor;
     private int x, z;
 
     public DFSCell(int x, int z) {
@@ -21,13 +21,16 @@ public class DFSCell {
         walls[3] = new Wall(x, z, 3); //east
         this.x = x;
         this.z = z;
+        door = null;
+        floor = null;
     }
 
-    public void display(Shader shader) {
+    public void display(Shader shader, float deltaTime) {
+        if (door != null ) { door.update(deltaTime); }
+        if (floor != null ) { floor.display(shader, deltaTime); }
         for (Wall wall : walls) {
-            if (wall != null) {
-                wall.draw(shader);
-            }
+            if (wall != null) { wall.draw(shader); }
+            if (door != null) { door.display(shader); }
         }
     }
 
@@ -67,15 +70,19 @@ public class DFSCell {
         for (Wall wall : walls){
             if (wall != null){
                if(wall.intersects(player)){
-                   System.out.println("Fór inn");
                    return wall;
                }
             }
         }
-
-        //Intersects DEATHCRUSHWALLS
-        //Intersects DEATHFALLFLOORS
         return null;
+    }
+
+    public void doorFloorCollision(Player player) {
+        // Move camera if door.collision
+        if (door != null) {if (door.intersects(player.camera)) {
+            door.collision(player); } }
+        // Check if floor is deadly
+        if (floor != null) { floor.onFloor(player); }
     }
 
 

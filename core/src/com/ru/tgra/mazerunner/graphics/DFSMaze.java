@@ -1,8 +1,6 @@
 package com.ru.tgra.mazerunner.graphics;
 
-import com.ru.tgra.mazerunner.graphics.objects.DFSCell;
-import com.ru.tgra.mazerunner.graphics.objects.Player;
-import com.ru.tgra.mazerunner.graphics.objects.Wall;
+import com.ru.tgra.mazerunner.graphics.objects.*;
 
 import java.util.*;
 
@@ -20,6 +18,8 @@ public class DFSMaze {
     }
     private int xSize, zSize;
     private DFSCell[][] cells;
+    private int numDoors = 8;
+    private int numFloors = 8;
 
     public DFSMaze(int xSize, int zSize){
         this.xSize = xSize;
@@ -36,6 +36,31 @@ public class DFSMaze {
 //        for (int i = 0;  i < (xSize * zSize)/5; i++){
 //            cells[rand.nextInt(xSize - 2) + 1][rand.nextInt(zSize - 2) + 1].destroyRandomWall();
 //        }
+
+        int a = 0;
+        while (a < numDoors) {
+            Random r = new Random();
+            int x = r.nextInt(xSize-1) + 1;
+            int z = r.nextInt(xSize-1) + 1;
+            if (cells[x][z].walls[3] != null && cells[x][z-1].walls[3] != null) {
+                if (cells[x][z].door == null) {
+                    cells[x][z].door = new Door(x, z);
+                    a++;
+                }
+            }
+        }
+
+        a = 0;
+        while (a < numFloors) {
+            Random r = new Random();
+            int x = r.nextInt(xSize);
+            int z = r.nextInt(xSize);
+            if (cells[x][z].floor == null) {
+                cells[x][z].floor = new DeadlyFloor(x, z, 0.9f, 0.3f);
+                a++;
+            }
+        }
+
     }
 
 
@@ -178,6 +203,9 @@ public class DFSMaze {
             }
         }
 
+        for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)) {
+            if (cell.door != null) { cell.doorFloorCollision(player); }
+        }
     }
 
     private void moveCamera(Player player, Wall minHitWall, String xz) {
@@ -202,10 +230,10 @@ public class DFSMaze {
         }
     }
 
-    public void display(Shader shader){
+    public void display(Shader shader, float deltaTime){
         for (int x = 0; x < xSize; ++x){
             for (int z = 0; z < zSize; ++z){
-                cells[x][z].display(shader);
+                cells[x][z].display(shader, deltaTime);
             }
         }
     }
