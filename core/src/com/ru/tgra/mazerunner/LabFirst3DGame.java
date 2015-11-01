@@ -124,7 +124,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private void displayMoon() {
         player.display(shader);
-        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.0f, 0);
+        shader.setLightDiffuse(0.8f, 0.8f, 1.0f, 0.0f, 0);
         shader.setMaterialDiffuse(1, 1, 1, 1);
         shader.setMaterialSpecular(0, 0, 0, 1.0f);
         shader.setLightPosition(-15, 20, 1, 1, 0);

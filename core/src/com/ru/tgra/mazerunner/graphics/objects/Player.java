@@ -84,7 +84,6 @@ public class Player {
             camera.walk(-2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            System.out.println(camera.eye.y);
             if (camera.eye.y == 0.08f) {
                 jump = true;
             }
@@ -138,7 +137,7 @@ public class Player {
         }
         displayPlayer(shader);
         flashlight(shader);
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
         shader.setEyePosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f);
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         shader.setViewMatrix(camera.getViewMatrix());
