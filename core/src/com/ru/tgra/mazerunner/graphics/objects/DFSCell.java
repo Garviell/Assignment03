@@ -1,8 +1,11 @@
 package com.ru.tgra.mazerunner.graphics.objects;
 
+import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.graphics.Shader;
 import com.ru.tgra.mazerunner.graphics.objects.Player;
 import com.ru.tgra.mazerunner.graphics.objects.Wall;
+import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.G3DJModelLoader;
+import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.MeshModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +14,7 @@ public class DFSCell {
     public Wall[] walls;
     public Door door;
     public DeadlyFloor floor;
+    MeshModel model;
     private int x, z;
 
     public DFSCell(int x, int z) {
@@ -26,6 +30,12 @@ public class DFSCell {
     }
 
     public void display(Shader shader, float deltaTime) {
+        //ModelMatrix.main.pushMatrix();
+        //ModelMatrix.main.addTranslation(x, 0, z);
+        //ModelMatrix.main.addScale(0.2f, 0.2f, 0.2f);
+        //model.draw(shader);
+        //ModelMatrix.main.popMatrix();
+
         if (door != null ) { door.update(deltaTime); }
         if (door != null) { door.display(shader); }
         if (floor != null ) { floor.display(shader, deltaTime); }
@@ -79,7 +89,7 @@ public class DFSCell {
 
     public void doorCollision(Player player) {
         // Move camera if door.collision
-        System.out.println("Núna");
+        System.out.println("Nï¿½na");
         if (door != null) {if (door.intersects(player.camera)) {
             door.collision(player); } }
     }

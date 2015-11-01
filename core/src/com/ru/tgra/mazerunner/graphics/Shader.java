@@ -47,7 +47,7 @@ public class Shader {
      */
     public Shader(){
         //Arrays to have multiple lights without needing to add functions
-        lc = 2;
+        lc = 7;
         lightPosLoc = new int[lc];
         lightDirLoc = new int[lc];
         lightFocLoc = new int[lc];

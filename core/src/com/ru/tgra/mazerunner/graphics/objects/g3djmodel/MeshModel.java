@@ -36,7 +36,7 @@ public class MeshModel {
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 			for(MeshModelNodePart part : node.parts){
                 shader.setMaterialDiffuse(part.material.diffuse.r, part.material.diffuse.g, part.material.diffuse.b, 1.0f);
-                shader.setMaterialDiffuse(part.material.specular.r, part.material.specular.g, part.material.specular.b, 1.0f);
+                shader.setMaterialSpecular(part.material.specular.r, part.material.specular.g, part.material.specular.b, 1.0f);
 				//TODO: send part.material.xxx into the shader
                 Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, part.part.mesh.vertices);
                 Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, part.part.mesh.normals);

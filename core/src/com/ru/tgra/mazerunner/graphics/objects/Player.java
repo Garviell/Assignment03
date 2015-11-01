@@ -151,7 +151,8 @@ public class Player {
         ModelMatrix.main.addTranslation(camera.eye.x , camera.eye.y + 0.2f, camera.eye.z);
         ModelMatrix.main.addScale(0.15f, 0.15f, 0.15f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere(shader, null);
+        //SphereGraphic.drawSolidSphere(shader, null);
+
         ModelMatrix.main.popMatrix();
     }
 

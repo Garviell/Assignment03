@@ -11,7 +11,7 @@ uniform float u_materialShininess;
 uniform sampler2D u_diffuseTexture;
 uniform float u_usesDiffuseTexture;
 
-const int lc = 2;
+const int lc = 7;
 uniform vec4 u_lightDirection[lc];
 uniform vec4 u_lightDiffuse[lc];
 uniform float u_lightFocus[lc];
@@ -50,6 +50,11 @@ void main()
         }
         lightCalcColor[i] = distanceAttenuation * spotAttenuation * (diffuseColor + specularColor);
 	}
+	vec4 lightcolor  = lightCalcColor[0];
+	 for (int i = 1; i < lc; ++i){
+        lightcolor = lightcolor + lightCalcColor[i];
+	}
 
-	gl_FragColor =  u_globalAmbient * materialDiffuse + lightCalcColor[0] + lightCalcColor[1] + u_materialEmission;
+
+	gl_FragColor =  u_globalAmbient * materialDiffuse + lightcolor + u_materialEmission;
 }

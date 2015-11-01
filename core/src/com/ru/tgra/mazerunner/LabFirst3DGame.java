@@ -3,13 +3,13 @@ package com.ru.tgra.mazerunner;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.Sky;
 import com.ru.tgra.mazerunner.graphics.objects.Player;
-import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
-import com.ru.tgra.mazerunner.graphics.shapes.CoordFrameGraphic;
+import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.MeshModel;
+import com.ru.tgra.mazerunner.graphics.shapes.*;
 import com.ru.tgra.mazerunner.graphics.DFSMaze;
-import com.ru.tgra.mazerunner.graphics.shapes.SincGraphic;
-import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
 import com.ru.tgra.mazerunner.logic.Camera;
 import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.util.Point3D;
@@ -21,6 +21,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private Camera orthoCam;
     private Shader shader;
     private boolean fullScreen;
+    private Texture floor;
+    private Texture space;
+    private Texture moon;
+    private Sky sky;
 
 //    private Maze maze;
     private DFSMaze maze;
@@ -37,6 +41,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 //        Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
         Gdx.graphics.setDisplayMode(1280, 1024, true);
         shader = new Shader();
+        floor =   new Texture(Gdx.files.internal("textures/conc4.jpg"));
+        moon =   new Texture(Gdx.files.internal("textures/phobos2k.png"));
+        space =   new Texture(Gdx.files.internal("textures/space5.jpg"));
+        sky = new Sky(5, -5, 5);
 
         Gdx.input.setInputProcessor(this);
 
@@ -45,6 +53,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
         BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
         SphereGraphic.create();
+        SkyGraphic.create();
         SincGraphic.create(shader.getVertexPointer());
         CoordFrameGraphic.create(shader.getVertexPointer());
 
@@ -63,15 +72,49 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
         maze = new DFSMaze(10, 10);
 
-        shader.setGlobalAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+
+        shader.setGlobalAmbient(0.0f, 0.0f, 0.0f, 1.0f);
         shader.setConstantAtt(0.1f, 0);
         shader.setLinearAtt(0.15f, 0);
-        shader.setQuadraticAtt(0.0000f, 0);
+        shader.setQuadraticAtt(0.0002f, 0);
 
         shader.setConstantAtt(0.05f, 1);
         shader.setLinearAtt(0.10f, 1);
         shader.setQuadraticAtt(0.0000f, 1);
         shader.setFocus(7, 1);
+
+        for (int i = 2; i < 7; i++){
+            shader.setConstantAtt(0.5f, i);
+            shader.setLinearAtt(0.01f, i);
+            shader.setQuadraticAtt(0.0010f, i);
+            shader.setFocus(1,i);
+        }
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 1.0f, 0);
+        shader.setLightPosition(-15, 20, 1, 1, 0);
+        shader.setLightDirection(15.2f, -10, 5, 1, 0);
+        shader.setFocus(1, 0);
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.8f, 2);
+        shader.setLightPosition(-50, 25, 5, 1, 2);
+        shader.setLightDirection(15.2f, -3, 5, 1, 2);
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.8f, 6);
+        shader.setLightPosition(75, 25, 5, 1, 6);
+        shader.setLightDirection(-15.2f, -3, 5, 1, 6);
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 1.0f, 3);
+        shader.setLightPosition(5, 25, -50, 1, 3);
+        shader.setLightDirection(5, 3, 15.2f, 1, 3);
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.8f, 4);
+        shader.setLightPosition(5, 30, 75, 1, 4);
+        shader.setLightDirection(5, -3, -15.2f, 1, 4);
+
+        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.8f, 5);
+        shader.setLightPosition(5, 70, 5, 1, 5);
+        shader.setLightDirection(0, -1, 0, 1, 5);
+
     }
 
     private void input() {
@@ -122,24 +165,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void displayMoon() {
-        player.display(shader);
-        shader.setLightDiffuse(0.8f, 0.8f, 0.8f, 0.0f, 0);
-        shader.setMaterialDiffuse(1, 1, 1, 1);
-        shader.setMaterialSpecular(0, 0, 0, 1.0f);
-        shader.setLightPosition(-15, 20, 1, 1, 0);
-        shader.setMaterialEmission(1, 1, 1, 1);
-        shader.setLightDirection(15.2f, -10, 5, 1, 0);
-        shader.setFocus(2, 0);
-        ModelMatrix.main.pushMatrix();
-        ModelMatrix.main.addTranslation(-15, 20, 1);
-        ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
-        shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere(shader, null);
-        shader.setMaterialEmission(0, 0, 0, 1);
-        ModelMatrix.main.popMatrix();
-    }
-
     private void display() {
         if (player.isAlive()) {
             //do all actual drawing and rendering here
@@ -147,7 +172,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
             for (int viewNum = 0; viewNum < 2; viewNum++) {
                 Camera camera = player.camera;
-                displayMoon();
+                player.display(shader);
+                sky.draw(shader, deltaTime);
                 if (viewNum == 0) {
 
                     player.score.display(shader, deltaTime);
@@ -209,7 +235,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
         ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader, null, null);
+        BoxGraphic.drawSolidCube(shader, floor, null);
         ModelMatrix.main.popMatrix();
     }
 

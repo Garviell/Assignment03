@@ -1,15 +1,14 @@
 package com.ru.tgra.mazerunner.graphics.shapes;
 
-import java.nio.FloatBuffer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.mazerunner.graphics.Shader;
-import com.ru.tgra.mazerunner.util.Material;
 
-public class SphereGraphic {
+import java.nio.FloatBuffer;
+
+public class SkyGraphic {
 
 	private static FloatBuffer vertexBuffer;
 	private static FloatBuffer normalBuffer;
@@ -44,11 +43,11 @@ public class SphereGraphic {
 				array[vertexCount*3 + 4] = (float)Math.cos(stackAngle + stackInterval);
 				array[vertexCount*3 + 5] = (float)Math.sin(stackAngle + stackInterval) * (float)Math.sin(sliceAngle);
 
-				uvArray[vertexCount*2] = 	     ((float)sliceCount / (float)slices);
-				uvArray[vertexCount*2 + 1] = 	 ((float)(stackCount) / (float)slices);
+				uvArray[vertexCount*2] = 	     ((float)sliceCount / (float)slices)*1.7f;
+				uvArray[vertexCount*2 + 1] = 	 ((float)(stackCount) / (float)slices)*1.7f;
 
-				uvArray[vertexCount*2 + 2] = 	 ((float)(sliceCount) / (float)slices);
-				uvArray[vertexCount*2 + 3] = 	 ((float)(stackCount + 1) / (float)slices);
+				uvArray[vertexCount*2 + 2] = 	 ((float)(sliceCount) / (float)slices)*1.7f;
+				uvArray[vertexCount*2 + 3] = 	 ((float)(stackCount + 1) / (float)slices)*1.7f;
 
 
 				vertexCount += 2;

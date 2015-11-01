@@ -9,8 +9,8 @@ import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 public class Wall {
 	public enum Sides{south,west, north, east}
     public Sides side;
-    private Texture tex;
-    private Texture spectex;
+    private static Texture tex;
+    private static Texture spectex;
 	float posX;
 	float posZ;
 	float widthX;
@@ -18,11 +18,10 @@ public class Wall {
 	float distanceX;
 	float distanceZ;
 
-
 	
 	public Wall(float x, float z, int side)
 	{
-        tex = new Texture(Gdx.files.internal("textures/redbricksmall.jpg"));
+        tex = new Texture(Gdx.files.internal("textures/conc3.jpg"));
         spectex = new Texture(Gdx.files.internal("textures/spectex01.png"));
 
         switch (side){
@@ -30,24 +29,24 @@ public class Wall {
                 this.posX = x;
                 this.posZ = z + 0.5f;
                 this.widthX = 0.1f;
-                this.widthZ = 1.1f;
+                this.widthZ = 1.0f;
                 break;
             case 1: //west
                 this.posX = x + 0.5f;
                 this.posZ = z;
-                this.widthX = 1.1f;
+                this.widthX = 1.0f;
                 this.widthZ = 0.1f;
                 break;
             case 2: //north
                 this.posX = x + 1.0f;
                 this.posZ = z + 0.5f;
                 this.widthX = 0.1f;
-                this.widthZ = 1.1f;
+                this.widthZ = 1.0f;
                 break;
             case 3: //east
                 this.posX = x + 0.5f;
                 this.posZ = z + 1.0f;
-                this.widthX = 1.1f;
+                this.widthX = 1.0f;
                 this.widthZ = 0.1f;
                 break;
         }

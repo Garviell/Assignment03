@@ -38,7 +38,7 @@ public class DFSMaze {
 //        }
 
         int a = 0;
-        while (a < numDoors) {
+        while (a < 0) {
             Random r = new Random();
             int x = r.nextInt(xSize-1) + 1;
             int z = r.nextInt(xSize-1) + 1;
@@ -53,8 +53,8 @@ public class DFSMaze {
         a = 0;
         while (a < numFloors) {
             Random r = new Random();
-            int x = r.nextInt(xSize);
-            int z = r.nextInt(xSize);
+            int x = r.nextInt(xSize-2)+1;
+            int z = r.nextInt(zSize-2)+1;
             if (cells[x][z].floor == null) {
                 cells[x][z].floor = new DeadlyFloor(x, z, 0.9f, 0.3f);
                 a++;
@@ -63,6 +63,13 @@ public class DFSMaze {
 
     }
 
+    public int X(){
+        return xSize;
+    }
+
+    public int Z(){
+        return zSize;
+    }
 
     private void dfs(boolean[][] visited, Pair curr){
         visited[curr.x][curr.z] = true;

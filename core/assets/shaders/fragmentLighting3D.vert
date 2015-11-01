@@ -10,12 +10,12 @@ uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
 uniform mat4 u_projectionMatrix;
 
-const int lc = 2;
+const int lc = 7;
 uniform vec4 u_eyePosition;
-uniform vec4 u_lightPosition[2];
+uniform vec4 u_lightPosition[lc];
 varying vec4 v_normal;
-varying vec4 v_s[2];
-varying vec4 v_h[2];
+varying vec4 v_s[lc];
+varying vec4 v_h[lc];
 varying vec2 v_uv;
 
 void main()
