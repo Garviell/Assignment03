@@ -33,9 +33,10 @@ public class DFSMaze {
 
         boolean[][] visited = new boolean[xSize][zSize];
         dfs(visited, new Pair(xSize/2, zSize/2));
-//        for (int i = 0;  i < (xSize * zSize)/5; i++){
-//            cells[rand.nextInt(xSize - 2) + 1][rand.nextInt(zSize - 2) + 1].destroyRandomWall();
-//        }
+        Random rand = new Random();
+        for (int i = 0;  i < (xSize * zSize)/5; i++){
+            cells[rand.nextInt(xSize - 2) + 1][rand.nextInt(zSize - 2) + 1].destroyRandomWall();
+        }
 
         int a = 0;
         while (a < 0) {

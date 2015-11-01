@@ -10,6 +10,7 @@ public class Wall {
 	public enum Sides{south,west, north, east}
     public Sides side;
     private static Texture tex;
+    private static Texture smallTex;
     private static Texture spectex;
 	float posX;
 	float posZ;
@@ -22,8 +23,7 @@ public class Wall {
 	public Wall(float x, float z, int side)
 	{
         tex = new Texture(Gdx.files.internal("textures/conc3.jpg"));
-        spectex = new Texture(Gdx.files.internal("textures/spectex01.png"));
-
+        smallTex = new Texture(Gdx.files.internal("textures/conc3small.jpg"));
         switch (side){
             case 0: //south
                 this.posX = x;
@@ -54,7 +54,7 @@ public class Wall {
 		this.distanceZ = Float.MAX_VALUE;
 	}
 
-	public void draw(Shader shader){
+	public void draw(Shader shader, boolean big){
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
         shader.setMaterialDiffuse(0.5f, 0.5f, 0.7f, 1.0f);
         shader.setShininess(2000);
@@ -62,7 +62,8 @@ public class Wall {
         ModelMatrix.main.addTranslation(posX, 0, posZ);
         ModelMatrix.main.addScale(widthX, 1.0f, widthZ);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader, tex, spectex);
+        if(big) BoxGraphic.drawSolidCube(shader, tex, null);
+        else BoxGraphic.drawSolidCube(shader, smallTex, null);
         ModelMatrix.main.popMatrix();
     }
 

@@ -30,7 +30,7 @@ public class DFSCell {
         if (door != null) { door.display(shader); }
         if (floor != null ) { floor.display(shader, deltaTime); }
         for (Wall wall : walls) {
-            if (wall != null) { wall.draw(shader); }
+            if (wall != null) { wall.draw(shader, true); }
         }
     }
 
