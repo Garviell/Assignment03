@@ -79,7 +79,6 @@ public class DFSCell {
 
     public void doorCollision(Player player) {
         // Move camera if door.collision
-        System.out.println("Núna");
         if (door != null) {if (door.intersects(player.camera)) {
             door.collision(player); } }
     }

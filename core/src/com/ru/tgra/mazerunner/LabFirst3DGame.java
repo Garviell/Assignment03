@@ -14,11 +14,12 @@ import com.ru.tgra.mazerunner.logic.Camera;
 import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.util.Point3D;
 import com.ru.tgra.mazerunner.util.Vector3D;
+import com.sun.xml.internal.bind.v2.TODO;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
-    private Player player;
-    private Camera orthoCam;
+    private Player player1;
+    private Player player2;
     private Shader shader;
     private boolean fullScreen;
 
@@ -57,9 +58,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         //Camera
-        player = new Player(fov);
-        orthoCam = new Camera();
-        orthoCam.orthographicProjection(-4, 4, -4, 4, 3.0f, 100);
+        player1 = new Player(fov, new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f));
+        player2 = new Player(fov, new Point3D(8.5f, 0.08f, 8.5f), new Point3D(7.5f,0.0f,6.5f));
 
         maze = new DFSMaze(10, 10);
 
@@ -94,25 +94,29 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 Gdx.graphics.setDisplayMode(width, height, fullScreen);
             }
         }
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-//            maze.reset();
-//            maze.moreDeath();
-//        }
+
+        controls();
 
     }
 
     private void update() {
+        update(player1);
+        update(player2);
+    }
+
+    private void update(Player player) {
+        //player1.setViweForMap(0, 0, 200, 200);
+        //player2.setViweForMap(Gdx.graphics.getWidth() - 400, 0, Gdx.graphics.getWidth() - 200, 200);
         if (player.isAlive()) {
             deltaTime = Gdx.graphics.getDeltaTime();
 
             angle += 180.0f * deltaTime;
             player.update(deltaTime);
             maze.update(player);
-//            maze.checkCollision(player, deltaTime);
 
         } else {
             player.flipAlive();
-            loseThings();
+            loseThings(player);
             shader.setModelMatrix(ModelMatrix.main.getMatrix());
             try {
                 Thread.sleep(3000);
@@ -122,95 +126,20 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void displayMoon() {
-        player.display(shader);
-        shader.setLightDiffuse(0.8f, 0.8f, 1.0f, 0.0f, 0);
-        shader.setMaterialDiffuse(1, 1, 1, 1);
-        shader.setMaterialSpecular(0, 0, 0, 1.0f);
-        shader.setLightPosition(-15, 20, 1, 1, 0);
-        shader.setMaterialEmission(1, 1, 1, 1);
-        shader.setLightDirection(15.2f, -10, 5, 1, 0);
-        shader.setFocus(2, 0);
-        ModelMatrix.main.pushMatrix();
-        ModelMatrix.main.addTranslation(-15, 20, 1);
-        ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
-        shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere(shader, null);
-        shader.setMaterialEmission(0, 0, 0, 1);
-        ModelMatrix.main.popMatrix();
-    }
-
     private void display() {
-        if (player.isAlive()) {
-            //do all actual drawing and rendering here
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-            for (int viewNum = 0; viewNum < 2; viewNum++) {
-                Camera camera = player.camera;
-                displayMoon();
-                if (viewNum == 0) {
-
-                    player.score.display(shader, deltaTime);
-                    drawFloor();
-
-                } else {
-                    shader.setLightDiffuse(1.0f, 0.9f, 1.0f, 0.0f, 0);
-                    shader.setLightPosition(camera.eye.x, 10.0f, camera.eye.z, 0.0f, 0);
-                    shader.setLightDirection(0, -1, 0, 1, 0);
-                    shader.setFocus(1, 0);
-                    shader.setEyePosition(camera.eye.x, 20.f, camera.eye.z, 1.0f);
-                    Gdx.gl.glViewport(0, 0, 200, 200);
-
-                    orthoCam.look(new Point3D(camera.eye.x, 35.0f, camera.eye.z), camera.eye, new Vector3D(0, 0, -1));
-                    shader.setViewMatrix(orthoCam.getViewMatrix());
-                    shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
-                    drawFloor();
-                }
-
-                shader.setShininess(10);
-                ModelMatrix.main.loadIdentityMatrix();
-
-                shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
-                maze.display(shader, deltaTime);
-
-
-                player.score.display(shader, deltaTime);
-
-                // Mini-map
-                if (viewNum == 1) {
-                    player.displayMap(shader);
-                }
-            }
-        } else {
-            player.camera.look(new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f), new Vector3D(0, 0.8f, 0));
-            player.camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
-            shader.setViewMatrix(player.camera.getViewMatrix());
-            shader.setProjectionMatrix(player.camera.getProjectionMatrix());
-            Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-            Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        }
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        player1.display(shader, 0, Gdx.graphics.getWidth() / 2, deltaTime, maze);
+        player2.display(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth(), deltaTime, maze);
+        player1.displayOtherPlayer(shader, player2);
+        player2.displayOtherPlayer(shader, player1);
     }
 
     @Override
     public void render() {
         input();
-        //put the code inside the update and display methods, depending on the nature of the code
         update();
         display();
 
-    }
-
-    public void drawFloor() {
-        shader.setMaterialDiffuse(0.13333f, 0.133333f, 0.183333f, 1.0f);
-        shader.setMaterialSpecular(0.013333f, 0.013333f, 0.133333f, 1.0f);
-        shader.setShininess(30);
-        ModelMatrix.main.pushMatrix();
-        ModelMatrix.main.addTranslation(10.0f, -0.5f, 10.0f);
-        ModelMatrix.main.addScale(23.0f, 0.01f, 23.0f);
-        shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader, null, null);
-        ModelMatrix.main.popMatrix();
     }
 
     public void drawCeiling() {
@@ -223,11 +152,95 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         ModelMatrix.main.popMatrix();
     }
 
-    public void loseThings() {
+    public void loseThings(Player player) {
         for (int i = 0; i < thingsLostWhenDeathOccurs; i++) {
             if (player.score.numScore > 0) {
                 player.score.removething();
             }
+        }
+    }
+
+    public void controls() {
+        // Controls for player 1
+        if(Gdx.input.isKeyPressed(Input.Keys.Z)) {
+            player1.camera.rotateY(90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.V)) {
+            player1.camera.rotateY(-90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+            player1.camera.pitch(-90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+            player1.camera.pitch(90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+            player1.camera.slide(-2.0f * deltaTime, 0, 0);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+            player1.camera.slide(2.0f * deltaTime, 0, 0);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+            player1.camera.walk(2.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player1.camera.walk(-2.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (player1.camera.eye.y == 0.08f) {
+                player1.jump = true;
+            }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.T)) {
+            player1.changeFov(-20.0f, deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.G)) {
+            player1.changeFov(20.0f, deltaTime);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            player1.flashlight = !player1.flashlight;
+        }
+
+        // Controls for player 2
+        if(Gdx.input.isKeyPressed(Input.Keys.B)) {
+            player2.camera.rotateY(90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.COMMA)) {
+            player2.camera.rotateY(-90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.N)) {
+            player2.camera.pitch(-90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.M)) {
+            player2.camera.pitch(90.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            player2.camera.slide(-2.0f * deltaTime, 0, 0);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            player2.camera.slide(2.0f * deltaTime, 0, 0);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            player2.camera.walk(2.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            player2.camera.walk(-2.0f * deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+            if (player2.camera.eye.y == 0.08f) {
+                player2.jump = true;
+            }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.Y)) {
+            player2.changeFov(-20.0f, deltaTime);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.H)) {
+            player2.changeFov(20.0f, deltaTime);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            player2.flashlight = !player2.
+
+                    flashlight;
         }
     }
 
