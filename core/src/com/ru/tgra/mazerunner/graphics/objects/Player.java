@@ -20,6 +20,7 @@ public class Player {
     private boolean jump;
     private boolean up;
     private int jumpCount;
+    private int hang;
     
 
     public Player(float fov){
@@ -34,6 +35,7 @@ public class Player {
         jump = false;
         up = true;
         jumpCount = 0;
+        hang = 0;
     }
 
 
@@ -99,15 +101,25 @@ public class Player {
 
         if (jump) {
             if (up) {
-                camera.jump(0, 2.0f * deltaTime, 0);
-                jumpCount++;
-                if (jumpCount == 15) {
-                    up = false;
+                if ( hang == 0) {
+                    camera.jump(0, 2.0f * deltaTime, 0);
+                    jumpCount++;
+                }
+                if (jumpCount == 20) {
+                    if ( hang == 5) { up = false; }
+                    camera.jump(0, 0.2f * deltaTime, 0);
+                    hang++;
                 }
             }
             else {
-                camera.jump(0, -2.0f * deltaTime, 0);
-                jumpCount--;
+                if (hang == 0) {
+                    camera.jump(0, -2.0f * deltaTime, 0);
+                    jumpCount--;
+                }
+                else {
+                    camera.jump(0, -0.2f * deltaTime, 0);
+                    hang--;
+                }
                 if (jumpCount == 0) {
                     camera.eye.y = 0.08f;
                     jump = false;
@@ -124,12 +136,23 @@ public class Player {
         } else {
             shader.setLightDiffuse(0.0f, 0.0f,0.0f,1.0f, 1);
         }
+        displayPlayer(shader);
         flashlight(shader);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shader.setEyePosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f);
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
         shader.setViewMatrix(camera.getViewMatrix());
         shader.setProjectionMatrix(camera.getProjectionMatrix());
+    }
+
+    public void displayPlayer(Shader shader) {
+        shader.setMaterialDiffuse(1.0f, 0.3f, 0.1f, 1.0f);
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(camera.eye.x , camera.eye.y + 0.2f, camera.eye.z);
+        ModelMatrix.main.addScale(0.15f, 0.15f, 0.15f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        SphereGraphic.drawSolidSphere();
+        ModelMatrix.main.popMatrix();
     }
 
     public void flashlight(Shader shader){

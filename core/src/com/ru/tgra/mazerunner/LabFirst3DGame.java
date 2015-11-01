@@ -181,7 +181,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 }
             }
         } else {
-            player.camera.look(new Point3D(-1.0f, 0.08f, -1.0f), new Point3D(0, 0.0f, 0), new Vector3D(0, 0.8f, 0));
+            player.camera.look(new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f), new Vector3D(0, 0.8f, 0));
             player.camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
             shader.setViewMatrix(player.camera.getViewMatrix());
             shader.setProjectionMatrix(player.camera.getProjectionMatrix());

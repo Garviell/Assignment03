@@ -49,7 +49,7 @@ public class DeadlyFloor {
     }
 
     public void onFloor(Player player) {
-        if (color >= deathAt) {
+        if (color >= deathAt && player.camera.eye.y <= 0.08f) {
             player.flipAlive();
         }
     }

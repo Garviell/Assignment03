@@ -204,8 +204,17 @@ public class DFSMaze {
         }
 
         for (DFSCell cell : getAdjCell(player.camera.eye.x, player.camera.eye.z)) {
-            if (cell.door != null) { cell.doorFloorCollision(player); }
+            if (cell.door != null) { cell.doorCollision(player); }
         }
+
+        int x = (int) Math.floor(player.camera.eye.x);
+        int z = (int) Math.floor(player.camera.eye.z);
+        if (x >= 0 && x < xSize && z >= 0 && z < zSize) {
+            if (cells[x][z].floor != null) {
+                cells[x][z].floor.onFloor(player);
+            }
+        }
+
     }
 
     private void moveCamera(Player player, Wall minHitWall, String xz) {
