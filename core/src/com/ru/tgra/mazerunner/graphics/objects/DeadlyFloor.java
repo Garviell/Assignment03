@@ -18,7 +18,7 @@ public class DeadlyFloor {
 
     private MeshModel model;
     public DeadlyFloor(float posX, float posZ, float deathAt, float changeRate) {
-        model = G3DJModelLoader.loadG3DJFromFile("du.g3dj");
+        model = G3DJModelLoader.loadG3DJFromFile("monkeybot.g3dj");
         Random rand = new Random();
         this.deathAt = deathAt;
         this.changeRate = changeRate;
@@ -43,7 +43,7 @@ public class DeadlyFloor {
         update(deltatime);
         ModelMatrix.main.pushMatrix();
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        ModelMatrix.main.addTranslation(posX, 0, posZ);
+        ModelMatrix.main.addTranslation(posX, 2, posZ);
         ModelMatrix.main.addScale(0.1f, 0.10f, 0.1f);
         model.draw(shader);
         ModelMatrix.main.popMatrix();
