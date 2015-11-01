@@ -44,7 +44,7 @@ public class DeadlyFloor {
         ModelMatrix.main.addTranslation(posX, -0.503f, posZ);
         ModelMatrix.main.addScale(1.0f, 0.02f, 1.0f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        BoxGraphic.drawSolidCube(shader);
+        BoxGraphic.drawSolidCube(shader, null, null);
         ModelMatrix.main.popMatrix();
     }
 

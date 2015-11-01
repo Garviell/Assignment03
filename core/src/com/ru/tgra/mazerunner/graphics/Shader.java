@@ -93,12 +93,13 @@ public class Shader {
 
         modelMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
         viewMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
+
         projectionMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
-        eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
-        materialDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
         usesDiffuseTexLoc       = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
         diffuseTextureLoc       = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
+        eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
+        materialDifLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
         materialShineLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
         globalAmbientLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
@@ -114,6 +115,7 @@ public class Shader {
 
         }
         Gdx.gl.glUseProgram(renderingProgramID);
+        Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
     }
 
         public void setDiffuseTexture(Texture tex)
@@ -121,6 +123,7 @@ public class Shader {
         if(tex == null)
         {
             Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
+            Gdx.gl.glUniform1i(diffuseTextureLoc, 0);
             usesDiffuseTexture = false;
         }
         else

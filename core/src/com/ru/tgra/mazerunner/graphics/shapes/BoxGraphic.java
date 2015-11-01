@@ -5,6 +5,7 @@ import java.nio.ShortBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.mazerunner.graphics.Shader;
 
@@ -79,35 +80,66 @@ public class BoxGraphic {
 		normalBuffer.put(normalArray);
 		normalBuffer.rewind();
         //UV TEXTURE COORD ARRAY IS FILLED HERE
-		float[] uvArray = {0.3333f, 0.3333f,
-							0.6666f, 0.3333f,
-							0.6666f, 0.6666f,
-							0.3333f, 0.6666f,
+//        float[] uvArray = {
+//                0.3333f, 0.3333f, //1
+//                0.6666f, 0.3333f,
+//                0.6666f, 0.6666f,
+//                0.3333f, 0.6666f,
+//
+//                0.6666f, 0.6666f, //6
+//                1.0f, 0.6666f,
+//                1.0f, 1.0f,
+//                0.6666f, 1.0f,
+//
+//                0.6666f, 0.3333f, //5
+//                1.0f, 0.3333f,
+//                1.0f, 0.6666f,
+//                0.6666f, 0.6666f,
+//
+//                0.3333f, 0.0f, //4
+//                0.6666f, 0.0f,
+//                0.6666f, 0.3333f,
+//                0.3333f, 0.3333f,
+//
+//                0.0f, 0.3333f, //2
+//                0.3333f, 0.3333f,
+//                0.3333f, 0.6666f,
+//                0.0f, 0.6666f,
+//
+//                0.3333f, 0.6666f, //3
+//                0.6666f, 0.6666f,
+//                0.6666f, 1.0f,
+//                0.3333f, 1.0f,};
+		float[] uvArray = {
+                0.3333f, 0.3333f, //1
+                0.6666f, 0.3333f,
+				0.6666f, 0.6666f,
+				0.3333f, 0.6666f,
 
-							0.6666f, 0.6666f,
-							1.0f, 0.6666f,
-							1.0f, 1.0f,
-							0.6666f, 1.0f,
+				0.6666f, 0.6666f, //6
+				1.0f, 0.6666f,
+				1.0f, 1.0f,
+				0.6666f, 1.0f,
 
-							0.0f, 0.3333f,
-							1.0f, 0.3333f,
-							1.0f, 0.6666f,
-							0.0f, 0.6666f,
+				0.6666f, 0.3333f, //5
+				1.0f, 0.3333f,
+				1.0f, 0.6666f,
+				0.6666f, 0.6666f,
 
-							0.6666f, 0.3333f,
-							1.0f, 0.3333f,
-							1.0f, 0.6666f,
-							0.6666f, 0.6666f,
+				0.3333f, 0.0f, //4
+				0.6666f, 0.0f,
+				0.6666f, 0.3333f,
+				0.3333f, 0.3333f,
 
-							0.0f, 0.0f,
-							2.0f, 0.0f,
-							2.0f, 2.0f,
-							0.0f, 2.0f,
+				0.0f, 0.3333f, //2
+				0.3333f, 0.3333f,
+				0.3333f, 0.6666f,
+				0.0f, 0.6666f,
 
-							0.0f, 1.0f,
-							1.0f, 1.0f,
-							1.0f, 0.0f,
-							0.0f, 0.0f};
+				0.3333f, 0.6666f, //3
+				0.6666f, 0.6666f,
+				0.6666f, 1.0f,
+				0.3333f, 1.0f,};
 
 		uvBuffer = BufferUtils.newFloatBuffer(48);
 		BufferUtils.copy(uvArray, 0, uvBuffer, 48);
@@ -123,12 +155,14 @@ public class BoxGraphic {
         indexBuffer.rewind();
 	}
 
-	public static void drawSolidCube(Shader shader) {
+	public static void drawSolidCube(Shader shader, Texture texture, Texture specTecture) {
+        shader.setDiffuseTexture(texture);
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
-//        Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+        Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
         Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, 36, GL20.GL_UNSIGNED_SHORT, indexBuffer);
+		shader.setDiffuseTexture(null);
 
 
 	}

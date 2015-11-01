@@ -36,7 +36,7 @@ public class ThingOne {
 		orientation.addRotationY(0.3f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawOutlineSphere();
+		SphereGraphic.drawOutlineSphere(shader);
         shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
 		ModelMatrix.main.popMatrix();
 
@@ -62,7 +62,7 @@ public class ThingOne {
 		ModelMatrix.main.addScale(0.3f, 0.3f, 0.3f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
         shader.setMaterialEmission(0.0f, 0.0f, 0.0f, 1.0f);
-		BoxGraphic.drawSolidCube(shader);
+		//BoxGraphic.drawSolidCube(shader, null, null);
 
 		ModelMatrix.main.popMatrix();
 	}
@@ -77,7 +77,7 @@ public class ThingOne {
 		ModelMatrix.main.addTranslation(x, y, z);
 		ModelMatrix.main.addScale(0.4f, 0.4f, 0.4f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawSolidSphere();
+		SphereGraphic.drawSolidSphere(shader, null);
 		shader.setMaterialEmission(0.0f, 0.0f, 0, 1.0f);
 		ModelMatrix.main.popMatrix();
 	}
