@@ -16,9 +16,7 @@ public class DeadlyFloor {
     private float changeRate;
     private boolean fading;
 
-    private MeshModel model;
     public DeadlyFloor(float posX, float posZ, float deathAt, float changeRate) {
-        model = G3DJModelLoader.loadG3DJFromFile("monkeybot2.g3dj");
         Random rand = new Random();
         this.deathAt = deathAt;
         this.changeRate = changeRate;

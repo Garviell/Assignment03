@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.nio.FloatBuffer;
 
-/**
- * Created by andri on 10/13/15.
- */
+
 public class Shader {
     private int lc;
     private int renderingProgramID;

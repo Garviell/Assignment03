@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.ru.tgra.mazerunner.graphics.DFSMaze;
 import com.ru.tgra.mazerunner.graphics.Shader;
+import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.G3DJModelLoader;
+import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.MeshModel;
 import com.ru.tgra.mazerunner.graphics.shapes.BoxGraphic;
 import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
 import com.ru.tgra.mazerunner.logic.Camera;
@@ -28,10 +30,7 @@ public class Player {
     private boolean up;
     private int jumpCount;
     private int hang;
-    //private int x0;
-    //private int z0;
-    //private int x1;
-    //private int z1;
+    private MeshModel model;
     
 
     public Player(float fov, Point3D eye, Point3D center){
@@ -43,6 +42,7 @@ public class Player {
         this.fov = fov;
         this.eye = eye;
         this.center = center;
+        model = G3DJModelLoader.loadG3DJFromFile("monkeybot.g3dj");
         flashlight = false;
         alive = true;
         body = 0.2f;
@@ -96,7 +96,7 @@ public class Player {
                     hang--;
                 }
                 if (jumpCount == 0) {
-                    camera.eye.y = 0.08f;
+                    camera.eye.y = 0.07f;
                     jump = false;
                     up = true;
                 }
@@ -105,7 +105,7 @@ public class Player {
 
     }
 
-    public void display(Shader shader, int viewXstart, int viewXend, float deltaTime, DFSMaze maze){
+    public void display(Shader shader, int viewXstart, int viewXend, float deltaTime, DFSMaze maze, Pill pill1, Pill pill2){
         if (isAlive()) {
 
             for (int viewNum = 0; viewNum < 2; viewNum++) {
@@ -126,6 +126,8 @@ public class Player {
                     shader.setViewMatrix(camera.getViewMatrix());
                     shader.setProjectionMatrix(camera.getProjectionMatrix());
 
+                    pill1.display(shader, deltaTime, true);
+                    pill2.display(shader, deltaTime, false);
                     score.display(shader, deltaTime);
                     drawFloor(shader);
 
@@ -153,16 +155,52 @@ public class Player {
 
     }
 
+    public void intersectWithPlayer(Player otherPlayer) {
+        float x = Math.abs(camera.eye.x - otherPlayer.camera.eye.x);
+        float z = Math.abs(camera.eye.z - otherPlayer.camera.eye.z);
+        if (intersect(otherPlayer)) {
+            if (x < z) {
+                if (camera.eye.x < otherPlayer.camera.eye.x) {
+                    camera.eye.x = otherPlayer.camera.eye.x - (body + otherPlayer.body);
+                } else {
+                    camera.eye.x = otherPlayer.camera.eye.x + (body + otherPlayer.body);
+                }
+            }
+            else {
+                if (camera.eye.z < otherPlayer.camera.eye.z) {
+                    camera.eye.z = otherPlayer.camera.eye.z - (body + otherPlayer.body);
+                } else {
+                    camera.eye.z = otherPlayer.camera.eye.z + (body + otherPlayer.body);
+                }
+            }
+        }
+    }
+
+    public boolean intersect(Player otherPlayer) {
+        float x = Math.abs(camera.eye.x - otherPlayer.camera.eye.x);
+        float z = Math.abs(camera.eye.z - otherPlayer.camera.eye.z);
+        return x < body + otherPlayer.body && z < body + otherPlayer.body;
+    }
+
     public void displayOtherPlayer(Shader shader, Player otherPlayer) {
         Gdx.gl.glViewport(viewXstart, 0, viewXend, Gdx.graphics.getHeight());
         shader.setViewMatrix(camera.getViewMatrix());
         shader.setMaterialDiffuse(1.0f, 0.3f, 0.1f, 1.0f);
         ModelMatrix.main.pushMatrix();
         ModelMatrix.main.addTranslation(otherPlayer.camera.eye.x , otherPlayer.camera.eye.y + 1.2f, otherPlayer.camera.eye.z);
-        ModelMatrix.main.addScale(0.15f, 0.15f, 0.15f);
+        ModelMatrix.main.addScale(0.05f, 0.05f, 0.05f);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        //SphereGraphic.drawSolidSphere(shader, null);
+        SphereGraphic.drawSolidSphere(shader, null);
 
+        ModelMatrix.main.popMatrix();
+
+        ModelMatrix.main.pushMatrix();
+        ModelMatrix.main.addTranslation(otherPlayer.camera.eye.x , otherPlayer.camera.eye.y - 0.3f, otherPlayer.camera.eye.z);
+        ModelMatrix.main.addScale(0.15f, 0.15f, 0.15f);
+        ModelMatrix.main.addRotationX(5.0f);
+        ModelMatrix.main.addRotationZ(90.0f);
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        model.draw(shader);
         ModelMatrix.main.popMatrix();
     }
 

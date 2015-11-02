@@ -4,8 +4,10 @@ package com.ru.tgra.mazerunner;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.ru.tgra.mazerunner.graphics.Shader;
 import com.ru.tgra.mazerunner.graphics.Sky;
+import com.ru.tgra.mazerunner.graphics.objects.Pill;
 import com.ru.tgra.mazerunner.graphics.objects.Player;
 import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.MeshModel;
 import com.ru.tgra.mazerunner.graphics.shapes.*;
@@ -15,17 +17,23 @@ import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.util.Point3D;
 import com.ru.tgra.mazerunner.util.Vector3D;
 import com.sun.xml.internal.bind.v2.TODO;
+import java.util.Random;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 
     private Player player1;
     private Player player2;
+    private Pill pill1;
+    private Pill pill2;
     private Shader shader;
     private boolean fullScreen;
     private Texture floor;
     private Texture space;
     private Texture moon;
     private Sky sky;
+    private Random rand = new Random();
+    private int sizeX = 10;
+    private int sizeZ = 10;
 
 //    private Maze maze;
     private DFSMaze maze;
@@ -42,7 +50,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 //        Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
         Gdx.graphics.setDisplayMode(1280, 1024, true);
         shader = new Shader();
-        floor =   new Texture(Gdx.files.internal("textures/conc4.jpg"));
+        floor =   new Texture(Gdx.files.internal("textures/conc3.jpg"));
         moon =   new Texture(Gdx.files.internal("textures/phobos2k.png"));
         space =   new Texture(Gdx.files.internal("textures/space5.jpg"));
         sky = new Sky(5, -5, 5);
@@ -67,10 +75,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         //Camera
-        player1 = new Player(fov, new Point3D(0.5f, 0.08f, 0.5f), new Point3D(1.5f,0.0f,0.5f));
-        player2 = new Player(fov, new Point3D(8.5f, 0.08f, 8.5f), new Point3D(7.5f,0.0f,6.5f));
+        player1 = new Player(fov, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f));
+        player2 = new Player(fov, new Point3D(0.5f, 0.07f, 1.5f), new Point3D(2.5f,0.0f,1.5f));
+        pill1 = new Pill(1.5f, 0.5f, true);
+        pill2 = new Pill(1.5f, 1.5f, false);
 
-        maze = new DFSMaze(10, 10);
+        maze = new DFSMaze(sizeX, sizeZ);
 
 
         shader.setGlobalAmbient(0.0f, 0.0f, 0.0f, 1.0f);
@@ -143,8 +153,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     private void update() {
+        //player2.intersectWithPlayer(player1);
         update(player1);
         update(player2);
+        foundApill();
+        //player1.intersectWithPlayer(player2);
     }
 
     private void update(Player player) {
@@ -171,8 +184,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private void display() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        player1.display(shader, 0, Gdx.graphics.getWidth() / 2, deltaTime, maze);
-        player2.display(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth(), deltaTime, maze);
+        player1.display(shader, 0, Gdx.graphics.getWidth() / 2, deltaTime, maze, pill1, pill2);
+        player2.display(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth(), deltaTime, maze, pill1, pill2);
         player1.displayOtherPlayer(shader, player2);
         player2.displayOtherPlayer(shader, player1);
         sky.draw(shader, deltaTime);
@@ -231,7 +244,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
             player1.camera.walk(-2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (player1.camera.eye.y == 0.08f) {
+            if (player1.camera.eye.y == 0.07f) {
                 player1.jump = true;
             }
         }
@@ -271,7 +284,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
             player2.camera.walk(-2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-            if (player2.camera.eye.y == 0.08f) {
+            if (player2.camera.eye.y == 0.07f) {
                 player2.jump = true;
             }
         }
@@ -286,6 +299,32 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
                     flashlight;
         }
+    }
+
+    private void foundApill() {
+        if (pillIntersect(player1, pill1)) {
+            player1.score.numScore++;
+            pill1.posX = rand.nextInt(sizeX) + 0.5f;
+            pill1.posZ = rand.nextInt(sizeZ) + 0.5f;
+        }
+        if (pillIntersect(player1, pill2)) {
+            pill2.posX = rand.nextInt(sizeX) + 0.5f;
+            pill2.posZ = rand.nextInt(sizeZ) + 0.5f;
+        }
+        if (pillIntersect(player2, pill2)) {
+            player2.score.numScore++;
+            pill2.posX = rand.nextInt(sizeX) + 0.5f;
+            pill2.posZ = rand.nextInt(sizeZ) + 0.5f;
+        }
+        if (pillIntersect(player2, pill1)) {
+            pill1.posX = rand.nextInt(sizeX) + 0.5f;
+            pill1.posZ = rand.nextInt(sizeZ) + 0.5f;
+        }
+    }
+
+    private boolean pillIntersect(Player player, Pill pill) {
+        return Math.abs(player.camera.eye.x - pill.posX) < player.body + pill.body
+                && Math.abs(player.camera.eye.z - pill.posZ) < player.body + pill.body;
     }
 
 
