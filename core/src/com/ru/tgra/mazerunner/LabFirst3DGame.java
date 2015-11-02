@@ -259,28 +259,28 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         }
 
         // Controls for player 2
-        if(Gdx.input.isKeyPressed(Input.Keys.B)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             player2.camera.rotateY(90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.COMMA)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             player2.camera.rotateY(-90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.N)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player2.camera.pitch(-90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.M)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player2.camera.pitch(90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.H)) {
             player2.camera.slide(-2.0f * deltaTime, 0, 0);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.K)) {
             player2.camera.slide(2.0f * deltaTime, 0, 0);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.U)) {
             player2.camera.walk(2.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.J)) {
             player2.camera.walk(-2.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
