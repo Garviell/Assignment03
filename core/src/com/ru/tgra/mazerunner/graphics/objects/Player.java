@@ -26,6 +26,7 @@ public class Player {
     public Point3D center;
     public Score score;
     public boolean player1;
+    public float count;
     public float body;
     public boolean jump;
     private boolean up;
@@ -52,6 +53,7 @@ public class Player {
         up = true;
         jumpCount = 0;
         hang = 0;
+        count = 0;
     }
 
 

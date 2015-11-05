@@ -177,14 +177,19 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
             maze.update(player);
 
         } else {
-            player.flipAlive();
+            isDead(player, player.count);
+        }
+    }
+
+    private void isDead(Player player, float count) {
+        shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        if (count < 4) {
+            player.count += deltaTime;
+        }
+        else {
+            player.count = 0;
             loseThings(player);
-            shader.setModelMatrix(ModelMatrix.main.getMatrix());
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            player.flipAlive();
         }
     }
 
@@ -193,6 +198,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         player1.display(shader, 0, Gdx.graphics.getWidth() / 2, deltaTime, maze, pill1, pill2);
         player2.display(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth(), deltaTime, maze, pill1, pill2);
         player1.displayOtherPlayer(shader, player2);
+        sky.draw(shader, deltaTime);
         player2.displayOtherPlayer(shader, player1);
         sky.draw(shader, deltaTime);
     }
