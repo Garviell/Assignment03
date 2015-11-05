@@ -7,18 +7,20 @@
 	public ThingOne theThing;
 	public int numScore;
     public boolean win;
+    public boolean player1;
 
 	
-	public Score(Camera camera)
+	public Score(Boolean player1, int sizeX, int sizeZ)
 	{
-		theThing = new ThingOne();
+        this.player1 = player1;
+		theThing = new ThingOne(player1, sizeX, sizeZ);
 		numScore = 0;
         win = false;
 	}
 	
 	public void addThing()
 	{
-		if (numScore < 2) {
+		if (numScore < 3) {
             numScore++;
         }
         else {

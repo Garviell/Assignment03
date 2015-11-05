@@ -8,13 +8,17 @@ import com.ru.tgra.mazerunner.graphics.shapes.SphereGraphic;
 
 public class ThingOne {
 	public ModelMatrix orientation;
-	public float posX = 10.f;
+	public float posX;
 	public float posY = 5.0f;
-	public float posZ = 10.f;
+	public float posZ;
+    public Boolean player1;
 	private Point3D[] pos = new Point3D[16];
 	
-	public ThingOne()
+	public ThingOne(Boolean player1, int sizeX, int sizeZ)
 	{
+        posX = sizeX / 2;
+        posZ = sizeZ / 2;
+        this.player1 = player1;
 		orientation = new ModelMatrix();
 		orientation.loadIdentityMatrix();
 		orientation.addTransformation(orientation.matrix);
@@ -31,7 +35,12 @@ public class ThingOne {
 		ModelMatrix.main.addScale(0.3f, 0.3f, 0.3f);
 		
 		ModelMatrix.main.pushMatrix();
-        shader.setMaterialDiffuse(0, 0.9f, 0, 1.0f);
+        if (player1) {
+            shader.setMaterialDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
+        }
+        else {
+            shader.setMaterialDiffuse(0.0f, 0.0f, 1.0f, 1.0f);
+        }
         shader.setMaterialEmission(0.1f, 0.3f, 0.1f, 1.0f);
 		orientation.addRotationY(0.3f * deltaTime);
 		ModelMatrix.main.addTransformation(orientation.matrix);

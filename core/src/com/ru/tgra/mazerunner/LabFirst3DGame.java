@@ -16,6 +16,7 @@ import com.ru.tgra.mazerunner.logic.Camera;
 import com.ru.tgra.mazerunner.graphics.ModelMatrix;
 import com.ru.tgra.mazerunner.util.Point3D;
 import com.ru.tgra.mazerunner.util.Vector3D;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.sun.xml.internal.bind.v2.TODO;
 import java.util.Random;
 
@@ -75,8 +76,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         //Camera
-        player1 = new Player(fov, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f));
-        player2 = new Player(fov, new Point3D(0.5f, 0.07f, 1.5f), new Point3D(2.5f,0.0f,1.5f));
+        player1 = new Player(fov, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f), sizeX, sizeZ, true);
+        player2 = new Player(fov, new Point3D(0.5f, 0.07f, 1.5f), new Point3D(2.5f,0.0f,1.5f), sizeX, sizeZ, false);
         pill1 = new Pill(1.5f, 0.5f, true);
         pill2 = new Pill(1.5f, 1.5f, false);
 
@@ -335,6 +336,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     private void endGame() {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         player1.score.win = false;
         player2.score.win = false;
         player1.score.numScore = 0;

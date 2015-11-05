@@ -25,6 +25,7 @@ public class Player {
     public Point3D eye;
     public Point3D center;
     public Score score;
+    public boolean player1;
     public float body;
     public boolean jump;
     private boolean up;
@@ -33,7 +34,7 @@ public class Player {
     private MeshModel model;
     
 
-    public Player(float fov, Point3D eye, Point3D center){
+    public Player(float fov, Point3D eye, Point3D center, int sizeX, int sizeZ, boolean player1){
         camera = new Camera();
         camera.look(eye, center, new Vector3D(0,0.8f,0));
         camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
@@ -46,7 +47,7 @@ public class Player {
         flashlight = false;
         alive = true;
         body = 0.2f;
-        score = new Score(camera);
+        score = new Score(player1, sizeX, sizeZ);
         jump = false;
         up = true;
         jumpCount = 0;
