@@ -109,13 +109,16 @@ public class Camera {
 
 	public void pitch(float angle)
 	{
-		float radians = angle * (float)Math.PI / 180.0f;
-		float c = (float)Math.cos(radians);
-		float s = (float)Math.sin(radians);
+		float radians = angle * (float) Math.PI / 180.0f;
+		float c = (float) Math.cos(radians);
+		float s = (float) Math.sin(radians);
 		Vector3D t = new Vector3D(n.x, n.y, n.z);
 
-		n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
-		v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
+		if (  t.y * s + v.y * c > 0.2) {
+
+			n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
+			v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
+		}
 	}
 
 	public void orthographicProjection(float left, float right, float bottom, float top, float near, float far) {

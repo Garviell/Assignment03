@@ -278,10 +278,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
             player2.camera.rotateY(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.camera.pitch(-90.0f * deltaTime);
+            player2.camera.pitch(90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.camera.pitch(90.0f * deltaTime);
+            player2.camera.pitch(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.H)) {
             player2.camera.slide(-2.0f * deltaTime, 0, 0);
@@ -300,10 +300,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 player2.jump = true;
             }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.Y)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.O)) {
             player2.changeFov(-20.0f, deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.H)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
             player2.changeFov(20.0f, deltaTime);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
