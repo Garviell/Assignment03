@@ -143,16 +143,20 @@ public class Player {
                 score.display(shader, deltaTime);
             }
         } else {
-            Gdx.gl.glViewport(viewXstart, 0, viewXend, Gdx.graphics.getHeight());
-            camera.look(eye, center, new Vector3D(0, 0.8f, 0));
-            camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
-            shader.setViewMatrix(camera.getViewMatrix());
-            shader.setProjectionMatrix(camera.getProjectionMatrix());
-            Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-            Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            setPlayerHome(shader, viewXstart, viewXend);
         }
 
+    }
+
+    public void setPlayerHome(Shader shader, int viewXstart, int viewXend) {
+        Gdx.gl.glViewport(viewXstart, 0, viewXend, Gdx.graphics.getHeight());
+        camera.look(eye, center, new Vector3D(0, 0.8f, 0));
+        camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
+        shader.setViewMatrix(camera.getViewMatrix());
+        shader.setProjectionMatrix(camera.getProjectionMatrix());
+        Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     public void intersectWithPlayer(Player otherPlayer) {

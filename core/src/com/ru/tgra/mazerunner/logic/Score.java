@@ -6,21 +6,31 @@
 	public class Score {
 	public ThingOne theThing;
 	public int numScore;
+    public boolean win;
+
 	
 	public Score(Camera camera)
 	{
 		theThing = new ThingOne();
 		numScore = 0;
+        win = false;
 	}
 	
 	public void addThing()
 	{
-		numScore++;
+		if (numScore < 2) {
+            numScore++;
+        }
+        else {
+            win = true;
+        }
 	}
 	
 	public void removething()
 	{
-		numScore--;
+        if (numScore > 0) {
+            numScore--;
+        }
 	}
 	
 	public void display(Shader shader, float deltaTime)

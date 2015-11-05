@@ -154,9 +154,14 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private void update() {
         //player2.intersectWithPlayer(player1);
-        update(player1);
-        update(player2);
-        foundApill();
+        if (!player1.score.win && !player2.score.win) {
+            update(player1);
+            update(player2);
+            foundApill();
+        }
+        else {
+            endGame();
+        }
         //player1.intersectWithPlayer(player2);
     }
 
@@ -303,20 +308,22 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private void foundApill() {
         if (pillIntersect(player1, pill1)) {
-            player1.score.numScore++;
+            player1.score.addThing();
             pill1.posX = rand.nextInt(sizeX) + 0.5f;
             pill1.posZ = rand.nextInt(sizeZ) + 0.5f;
         }
         if (pillIntersect(player1, pill2)) {
+            player2.score.removething();
             pill2.posX = rand.nextInt(sizeX) + 0.5f;
             pill2.posZ = rand.nextInt(sizeZ) + 0.5f;
         }
         if (pillIntersect(player2, pill2)) {
-            player2.score.numScore++;
+            player2.score.addThing();
             pill2.posX = rand.nextInt(sizeX) + 0.5f;
             pill2.posZ = rand.nextInt(sizeZ) + 0.5f;
         }
         if (pillIntersect(player2, pill1)) {
+            player1.score.removething();
             pill1.posX = rand.nextInt(sizeX) + 0.5f;
             pill1.posZ = rand.nextInt(sizeZ) + 0.5f;
         }
@@ -325,6 +332,21 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private boolean pillIntersect(Player player, Pill pill) {
         return Math.abs(player.camera.eye.x - pill.posX) < player.body + pill.body
                 && Math.abs(player.camera.eye.z - pill.posZ) < player.body + pill.body;
+    }
+
+    private void endGame() {
+        player1.score.win = false;
+        player2.score.win = false;
+        player1.score.numScore = 0;
+        player2.score.numScore = 0;
+        player1.setPlayerHome(shader, 0, Gdx.graphics.getWidth() / 2);
+        player2.setPlayerHome(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth());
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
