@@ -247,10 +247,11 @@ public class DFSMaze {
         }
     }
 
-    public void display(Shader shader, float deltaTime){
+    public void display(Shader shader, float xx, float zz, float deltaTime){
         for (int x = 0; x < xSize; ++x){
             for (int z = 0; z < zSize; ++z){
-                cells[x][z].display(shader, deltaTime);
+                boolean close = Math.abs(xx - x) + Math.abs(zz - z) < 4; //This should be made bigger, i kept it smaller for emphasis
+                cells[x][z].display(shader, deltaTime, close);
             }
         }
     }

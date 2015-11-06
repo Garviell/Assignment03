@@ -25,12 +25,12 @@ public class DFSCell {
         floor = null;
     }
 
-    public void display(Shader shader, float deltaTime) {
+    public void display(Shader shader, float deltaTime, boolean close) {
         if (door != null ) { door.update(deltaTime); }
         if (door != null) { door.display(shader); }
         if (floor != null ) { floor.display(shader, deltaTime); }
         for (Wall wall : walls) {
-            if (wall != null) { wall.draw(shader, true); }
+            if (wall != null) { wall.draw(shader, close); }
         }
     }
 

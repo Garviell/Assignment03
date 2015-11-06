@@ -2,6 +2,7 @@ package com.ru.tgra.mazerunner.graphics.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.mazerunner.graphics.DFSMaze;
 import com.ru.tgra.mazerunner.graphics.Shader;
 import com.ru.tgra.mazerunner.graphics.objects.g3djmodel.G3DJModelLoader;
@@ -33,6 +34,7 @@ public class Player {
     private int jumpCount;
     private int hang;
     private MeshModel model;
+    private Texture moon;
     
 
     public Player(float fov, Point3D eye, Point3D center, int sizeX, int sizeZ, boolean player1){
@@ -54,6 +56,7 @@ public class Player {
         jumpCount = 0;
         hang = 0;
         count = 0;
+        moon =   new Texture(Gdx.files.internal("textures/phobos2k.png"));
     }
 
 
@@ -111,10 +114,10 @@ public class Player {
     public void display(Shader shader, int viewXstart, int viewXend, float deltaTime, DFSMaze maze, Pill pill1, Pill pill2){
         if (isAlive()) {
 
-            for (int viewNum = 0; viewNum < 2; viewNum++) {
+            //for (int viewNum = 0; viewNum < 2; viewNum++) {
                 displayMoon(shader);
 
-                if (viewNum == 0) {
+                //if (viewNum == 0) {
                     this.viewXstart = viewXstart;
                     this.viewXend = viewXend;
                     if (flashlight){
@@ -125,7 +128,7 @@ public class Player {
                     flashlight(shader);
                     Gdx.gl.glViewport(viewXstart, 0, viewXend, Gdx.graphics.getHeight());
                     shader.setEyePosition(camera.eye.x, camera.eye.y, camera.eye.z, 1.0f);
-                    camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
+                    if(player1)camera.perspectiveProjection(fov, 1.0f, 0.1f, 80.0f);
                     shader.setViewMatrix(camera.getViewMatrix());
                     shader.setProjectionMatrix(camera.getProjectionMatrix());
 
@@ -134,17 +137,17 @@ public class Player {
                     score.display(shader, deltaTime);
                     drawFloor(shader);
 
-                }
+              //  }
 
                 shader.setShininess(10);
                 ModelMatrix.main.loadIdentityMatrix();
 
                 shader.setMaterialDiffuse(1.0f, 0, 0, 1.0f);
-                maze.display(shader, deltaTime);
+                maze.display(shader, camera.eye.x, camera.eye.z, deltaTime);
 
 
                 score.display(shader, deltaTime);
-            }
+          // }
         } else {
             setPlayerHome(shader, viewXstart, viewXend);
         }
@@ -221,14 +224,14 @@ public class Player {
         shader.setMaterialDiffuse(1, 1, 1, 1);
         shader.setMaterialSpecular(0, 0, 0, 1.0f);
         shader.setLightPosition(-15, 20, 1, 1, 0);
-        shader.setMaterialEmission(1, 1, 1, 1);
+        shader.setMaterialEmission(0.6f, 0.2f, 0.05f, 1);
         shader.setLightDirection(15.2f, -10, 5, 1, 0);
         shader.setFocus(2, 0);
         ModelMatrix.main.pushMatrix();
-        ModelMatrix.main.addTranslation(-15, 20, 1);
-        ModelMatrix.main.addScale(0.5f, 0.5f, 0.5f);
+        ModelMatrix.main.addTranslation(-15, 20, -4);
+        ModelMatrix.main.addRotationX(40);
         shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        SphereGraphic.drawSolidSphere(shader, null);
+        SphereGraphic.drawSolidSphere(shader, moon);
         shader.setMaterialEmission(0, 0, 0, 1);
         ModelMatrix.main.popMatrix();
     }

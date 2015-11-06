@@ -26,6 +26,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private Player player2;
     private Pill pill1;
     private Pill pill2;
+    private boolean numpad;
     private Shader shader;
     private boolean fullScreen;
     private Texture floor;
@@ -41,15 +42,15 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     private float deltaTime;
     private float angle;
-    private float fov = 80.0f;
+    private float fov = 65.0f;
     private int thingsLostWhenDeathOccurs = 2;
 
     @Override
     public void create() {
         fullScreen = false;
+        numpad = true; // SET THIS AS FALSE IF YOU DONT HAVE A NUMPAD
         Graphics.DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
-//        Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
-        Gdx.graphics.setDisplayMode(1280, 1024, true);
+        Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
         shader = new Shader();
         floor =   new Texture(Gdx.files.internal("textures/conc3.jpg"));
         moon =   new Texture(Gdx.files.internal("textures/phobos2k.png"));
@@ -76,8 +77,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         //Camera
-        player1 = new Player(fov, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f), sizeX, sizeZ, true);
-        player2 = new Player(fov, new Point3D(0.5f, 0.07f, 1.5f), new Point3D(2.5f,0.0f,1.5f), sizeX, sizeZ, false);
+        player1 = new Player(50, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f), sizeX, sizeZ, true);
+        player2 = new Player(fov, new Point3D(0.5f, 0.07f, 0.5f), new Point3D(1.5f,0.0f,0.5f), sizeX, sizeZ, false);
         pill1 = new Pill(1.5f, 0.5f, true);
         pill2 = new Pill(1.5f, 1.5f, false);
 
@@ -231,71 +232,160 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
     public void controls() {
         // Controls for player 1
-        if(Gdx.input.isKeyPressed(Input.Keys.Z)) {
-            player1.camera.rotateY(90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.X)) {
-            player1.camera.rotateY(-90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.V)) {
-            player1.camera.pitch(-90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.C)) {
-            player1.camera.pitch(90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player1.camera.slide(-2.0f * deltaTime, 0, 0);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player1.camera.slide(2.0f * deltaTime, 0, 0);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.camera.walk(2.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.camera.walk(-2.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (player1.camera.eye.y == 0.07f) {
-                player1.jump = true;
+        if (numpad){
+            if(Gdx.input.isKeyPressed(Input.Keys.H)) {
+                player1.camera.rotateY(90.0f * deltaTime);
             }
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            player1.flashlight = !player1.flashlight;
-        }
+            if(Gdx.input.isKeyPressed(Input.Keys.K)) {
+                player1.camera.rotateY(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.U)) {
+                player1.camera.pitch(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.J)) {
+                player1.camera.pitch(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+                player1.camera.slide(-2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+                player1.camera.slide(2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+                player1.camera.walk(2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+                player1.camera.walk(-2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                if (player1.camera.eye.y == 0.07f) {
+                    player1.jump = true;
+                }
+            }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                player1.flashlight = !player1.flashlight;
+            }
 
-        // Controls for player 2
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player2.camera.rotateY(90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player2.camera.rotateY(-90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.camera.pitch(90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.camera.pitch(-90.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.H)) {
-            player2.camera.slide(-2.0f * deltaTime, 0, 0);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.K)) {
-            player2.camera.slide(2.0f * deltaTime, 0, 0);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.U)) {
-            player2.camera.walk(2.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.J)) {
-            player2.camera.walk(-2.0f * deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-            if (player2.camera.eye.y == 0.07f) {
-                player2.jump = true;
+            // Controls for player 2
+            if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4)) {
+
+                player2.camera.rotateY(90.0f * deltaTime);
             }
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            player2.flashlight = !player2.flashlight;
+            if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_6)) {
+
+                player2.camera.rotateY(-90.0f * deltaTime);
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_5)) {
+                player2.camera.pitch(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_8)) {
+                player2.camera.pitch(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                player2.camera.slide(-2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                player2.camera.slide(2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+
+                player2.camera.walk(2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                player2.camera.walk(-2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                if (player2.camera.eye.y == 0.07f) {
+                    player2.jump = true;
+                }
+            }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+                player2.flashlight = !player2.
+
+                        flashlight;
+            }
+        } else {
+            if(Gdx.input.isKeyPressed(Input.Keys.Z)) {
+                player1.camera.rotateY(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.V)) {
+                player1.camera.rotateY(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+                player1.camera.pitch(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+                player1.camera.pitch(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+                player1.camera.slide(-2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+                player1.camera.slide(2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+                player1.camera.walk(2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+                player1.camera.walk(-2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                if (player1.camera.eye.y == 0.07f) {
+                    player1.jump = true;
+                }
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.T)) {
+                player1.changeFov(-20.0f, deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.G)) {
+                player1.changeFov(20.0f, deltaTime);
+            }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                player1.flashlight = !player1.flashlight;
+            }
+
+            // Controls for player 2
+            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                player2.camera.rotateY(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                player2.camera.rotateY(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                player2.camera.pitch(90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                player2.camera.pitch(-90.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.H)) {
+                player2.camera.slide(-2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.K)) {
+                player2.camera.slide(2.0f * deltaTime, 0, 0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.U)) {
+                player2.camera.walk(2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.J)) {
+                player2.camera.walk(-2.0f * deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                if (player2.camera.eye.y == 0.07f) {
+                    player2.jump = true;
+                }
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.O)) {
+                player2.changeFov(-20.0f, deltaTime);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.P)) {
+                player2.changeFov(20.0f, deltaTime);
+            }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+                player2.flashlight = !player2.
+
+                        flashlight;
+            }
         }
     }
 
