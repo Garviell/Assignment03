@@ -32,9 +32,11 @@ public class DeadlyFloor {
         } else {
             color += (deltatime * changeRate);
         }
-        if (color < 0 || color > 1.0){
+        if (color < 0 || color > 1.0f){
             fading = !fading;
         }
+        if (color < 0) { color = 0; }
+        if (color > 1.0f) { color = 1.0f; }
     }
 
     public void display(Shader shader, float deltatime) {

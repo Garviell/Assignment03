@@ -20,7 +20,7 @@
 	
 	public void addThing()
 	{
-		if (numScore < 3) {
+		if (numScore < 2) {
             numScore++;
         }
         else {

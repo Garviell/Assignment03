@@ -196,11 +196,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     private void display() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         player1.display(shader, 0, Gdx.graphics.getWidth() / 2, deltaTime, maze, pill1, pill2);
+        sky.draw(shader, deltaTime);
         player2.display(shader, Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth(), deltaTime, maze, pill1, pill2);
-        player1.displayOtherPlayer(shader, player2);
         sky.draw(shader, deltaTime);
-        player2.displayOtherPlayer(shader, player1);
-        sky.draw(shader, deltaTime);
+        if (player1.isAlive()) { player1.displayOtherPlayer(shader, player2); }
+        if (player2.isAlive()) { player2.displayOtherPlayer(shader, player1); }
     }
 
     @Override
@@ -234,10 +234,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
         if(Gdx.input.isKeyPressed(Input.Keys.Z)) {
             player1.camera.rotateY(90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.V)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.X)) {
             player1.camera.rotateY(-90.0f * deltaTime);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.V)) {
             player1.camera.pitch(-90.0f * deltaTime);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.C)) {
@@ -342,7 +342,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
     }
 
     private void endGame() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         player1.score.win = false;
         player2.score.win = false;
         player1.score.numScore = 0;
