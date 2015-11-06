@@ -113,7 +113,6 @@ public class Camera {
 		float c = (float) Math.cos(radians);
 		float s = (float) Math.sin(radians);
 		Vector3D t = new Vector3D(n.x, n.y, n.z);
-
 		if (  t.y * s + v.y * c > 0.2) {
 
 			n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);

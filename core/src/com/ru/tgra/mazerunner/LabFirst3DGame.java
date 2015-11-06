@@ -260,12 +260,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 player1.jump = true;
             }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-            player1.changeFov(-20.0f, deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-            player1.changeFov(20.0f, deltaTime);
-        }
         if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             player1.flashlight = !player1.flashlight;
         }
@@ -300,16 +294,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
                 player2.jump = true;
             }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.O)) {
-            player2.changeFov(-20.0f, deltaTime);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
-            player2.changeFov(20.0f, deltaTime);
-        }
         if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            player2.flashlight = !player2.
-
-                    flashlight;
+            player2.flashlight = !player2.flashlight;
         }
     }
 
